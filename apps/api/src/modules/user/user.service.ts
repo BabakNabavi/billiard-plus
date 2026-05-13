@@ -30,11 +30,49 @@ export class UserService {
     const user = this.userRepository.create({
       ...data,
       password: hashedPassword,
+      primaryRole: 'user',
+      secondaryRoles: [],
+      isProfileComplete: false,
+      verificationStatus: 'unverified',
     });
     return this.userRepository.save(user);
   }
 
   async validatePassword(password: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
+  }
+
+  async updateProfile(id: string, data: any): Promise<User> {
+    const user = await this.findById(id);
+    if (!user) throw new Error('کاربر پیدا نشد');
+    Object.assign(user, data);
+    return this.userRepository.save(user);
+  }
+
+  async findByRole(role: string): Promise<Partial<User>[]> {
+    const users = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.primaryRole = :role OR :role = ANY(user.secondaryRoles)', { role })
+      .andWhere('user.isActive = true')
+      .andWhere('user.isProfileComplete = true')
+      .getMany();
+
+    return users.map(u => ({
+      id: u.id,
+      firstName: u.firstName,
+      lastName: u.lastName,
+      primaryRole: u.primaryRole,
+      secondaryRoles: u.secondaryRoles,
+      verificationStatus: u.verificationStatus,
+      bio: u.bio,
+      city: u.city,
+      avatar: u.avatar,
+      playerProfile: u.playerProfile,
+      coachProfile: u.coachProfile,
+      refereeProfile: u.refereeProfile,
+      manufacturerProfile: u.manufacturerProfile,
+      installerProfile: u.installerProfile,
+      sellerProfile: u.sellerProfile,
+    }));
   }
 }

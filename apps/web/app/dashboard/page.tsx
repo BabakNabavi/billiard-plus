@@ -60,16 +60,16 @@ export default function DashboardPage() {
 
   if (!user) return null;
 
-  const upcomingBookings = bookings.filter(b => 
+  const upcomingBookings = bookings.filter(b =>
     ['pending', 'confirmed'].includes(b.status)
   );
-  const pastBookings = bookings.filter(b => 
+  const pastBookings = bookings.filter(b =>
     ['completed', 'cancelled'].includes(b.status)
   );
 
   return (
     <div className="max-w-4xl mx-auto pb-10">
-      
+
       {/* هدر پروفایل */}
       <div className="bg-white p-6 rounded-xl shadow mb-6">
         <div className="flex items-center justify-between">
@@ -83,11 +83,12 @@ export default function DashboardPage() {
               </h1>
               <p className="text-gray-500 text-sm">{user.email}</p>
               <div className="flex gap-2 mt-1">
-                {user.roles.map((role) => (
+                {[user.primaryRole, ...(user.secondaryRoles || [])].map((role) => (
                   <span key={role} className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
-                    {role}
+                    {({ 'user': 'کاربر', 'player': 'بازیکن', 'coach': 'مربی', 'referee': 'داور', 'club_owner': 'باشگاه‌دار', 'seller': 'فروشنده', 'manufacturer': 'تولیدکننده', 'installer': 'متخصص نصب', 'admin': 'ادمین' } as any)[role] || role}
                   </span>
                 ))}
+                
               </div>
             </div>
           </div>
@@ -131,7 +132,7 @@ export default function DashboardPage() {
           >
             پروفایل
           </button>
-          {user.roles.includes('club_owner') && (
+          {(user.primaryRole === 'club_owner' || (user.secondaryRoles || []).includes('club_owner')) && (
             <button
               onClick={() => router.push('/dashboard/club')}
               className="flex-1 py-3 text-sm font-medium text-gray-500 hover:text-green-700"

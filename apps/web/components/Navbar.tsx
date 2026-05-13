@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { useAuthStore } from '../store/auth.store';
 
 export default function Navbar() {
   const { user, logout } = useAuthStore();
-
+  const [menuOpen, setMenuOpen] = useState(false);
   const showWarning = user && !user.isProfileComplete;
 
   return (
@@ -15,17 +16,54 @@ export default function Navbar() {
           🎱 بیلیارد پلاس
         </Link>
 
-        <div className="flex items-center gap-6">
-          <Link href="/clubs" className="hover:text-green-300 text-sm">
-            باشگاه‌ها
-          </Link>
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="hover:text-green-300 text-sm"
+            >
+              جستجو ▾
+            </button>
+            {menuOpen && (
+              <div className="absolute top-8 right-0 bg-white text-gray-800 rounded-xl shadow-lg p-3 w-48 z-50">
+                <Link href="/clubs" onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-green-50 rounded-lg text-sm">
+                  🏢 باشگاه‌ها
+                </Link>
+                <Link href="/players" onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-green-50 rounded-lg text-sm">
+                  🎱 بازیکنان
+                </Link>
+                <Link href="/coaches" onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-green-50 rounded-lg text-sm">
+                  👨‍🏫 مربیان
+                </Link>
+                <Link href="/referees" onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-green-50 rounded-lg text-sm">
+                  🏁 داوران
+                </Link>
+                <Link href="/sellers" onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-green-50 rounded-lg text-sm">
+                  🛍️ فروشندگان
+                </Link>
+                <Link href="/manufacturers" onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-green-50 rounded-lg text-sm">
+                  🏭 تولیدکنندگان
+                </Link>
+                <Link href="/installers" onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-green-50 rounded-lg text-sm">
+                  🔧 متخصصین نصب
+                </Link>
+              </div>
+            )}
+          </div>
 
           {user ? (
             <div className="flex items-center gap-4">
               <Link href="/dashboard" className="hover:text-green-300 text-sm">
                 داشبورد
               </Link>
-              {(user.primaryRole === 'club_owner' || user.secondaryRoles.includes('club_owner')) && (
+              {(user.primaryRole === 'club_owner' || (user.secondaryRoles || []).includes('club_owner')) && (
                 <Link href="/dashboard/club" className="hover:text-green-300 text-sm">
                   مدیریت باشگاه
                 </Link>
