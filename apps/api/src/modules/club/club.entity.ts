@@ -18,6 +18,9 @@ export class Club {
   name: string;
 
   @Column({ nullable: true })
+  managerName: string;
+
+  @Column({ nullable: true })
   description: string;
 
   @Column()
@@ -44,11 +47,61 @@ export class Club {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ default: 'Asia/Tehran' })
+  timezone: string;
+
+  // امکانات — تعداد میزها
+  @Column({ default: 0 })
+  snookerTables: number;
+
+  @Column({ default: 0 })
+  pocketTables: number;
+
+  @Column({ default: 0 })
+  highballTables: number;
+
+  @Column({ default: 0 })
+  vipSnookerTables: number;
+
+  @Column({ default: 0 })
+  vipPocketTables: number;
+
+  @Column({ default: 0 })
+  airHockeyTables: number;
+
+  @Column({ default: 0 })
+  dartBoards: number;
+
+  @Column({ default: 0 })
+  playstations: number;
+
+  // امکانات رفاهی
+  @Column({ default: false })
+  hasCafe: boolean;
+
+  @Column({ default: false })
+  hasParking: boolean;
+
+  @Column({ default: false })
+  hasWifi: boolean;
+
+  @Column({ default: false })
+  hasProfessionalCoach: boolean;
+
+  // امکانات ویژه
+  @Column({ nullable: true })
+  specialFeatures: string;
+
+  // ساعات کاری
   @Column({ type: 'jsonb', nullable: true })
   workingHours: object;
 
-  @Column({ default: 'Asia/Tehran' })
-  timezone: string;
+  // رسانه
+  @Column({ type: 'text', array: true, default: [] })
+  images: string[];
+
+  @Column({ type: 'text', array: true, default: [] })
+  videos: string[];
 
   @Column()
   ownerId: string;
