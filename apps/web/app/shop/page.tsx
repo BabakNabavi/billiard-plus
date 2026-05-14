@@ -1,0 +1,573 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import {
+    Search, Tag, ShoppingBag, Star, CheckCircle, MapPin,
+    Package, BookOpen, Shirt, Wrench, Circle, LayoutGrid,
+    Flame, Zap, ChevronLeft, ChevronRight, Shield, Trophy,
+    SlidersHorizontal, Timer, TrendingDown, Award
+} from 'lucide-react';
+
+interface Product {
+    id: string;
+    title: string;
+    price: number;
+    discountPrice?: number;
+    discountPercent?: number;
+    category: string;
+    condition: string;
+    city: string;
+    images: string[];
+    isVerified: boolean;
+    isOfficialStore: boolean;
+    isDailyDeal: boolean;
+    isSpecialSale: boolean;
+    seller: {
+        firstName: string;
+        lastName: string;
+        primaryRole: string;
+    };
+}
+
+const categories = [
+    { value: 'all', label: 'همه', icon: <LayoutGrid size={18} />, color: 'from-gray-700 to-gray-500' },
+    { value: 'table', label: 'میز بیلیارد', icon: <Package size={18} />, color: 'from-green-700 to-green-500' },
+    { value: 'cue', label: 'چوب', icon: <SlidersHorizontal size={18} />, color: 'from-amber-700 to-amber-500' },
+    { value: 'ball', label: 'توپ', icon: <Circle size={18} />, color: 'from-red-700 to-red-500' },
+    { value: 'accessory', label: 'لوازم جانبی', icon: <Wrench size={18} />, color: 'from-blue-700 to-blue-500' },
+    { value: 'clothing', label: 'پوشاک', icon: <Shirt size={18} />, color: 'from-purple-700 to-purple-500' },
+    { value: 'educational', label: 'آموزشی', icon: <BookOpen size={18} />, color: 'from-teal-700 to-teal-500' },
+    { value: 'other', label: 'سایر', icon: <ShoppingBag size={18} />, color: 'from-rose-700 to-rose-500' },
+];
+
+const conditionLabels: Record<string, string> = {
+    new: 'نو',
+    like_new: 'در حد نو',
+    used: 'کارکرده',
+};
+
+const roleLabels: Record<string, { label: string; color: string }> = {
+    admin: { label: 'فروشگاه رسمی بیلیارد پلاس', color: 'text-purple-600' },
+    seller: { label: 'فروشگاه', color: 'text-blue-600' },
+    manufacturer: { label: 'تولیدکننده', color: 'text-green-600' },
+    player: { label: 'بازیکن', color: 'text-orange-600' },
+    coach: { label: 'مربی', color: 'text-yellow-600' },
+    installer: { label: 'متخصص نصب', color: 'text-red-600' },
+    user: { label: 'کاربر', color: 'text-gray-600' },
+    referee: { label: 'داور', color: 'text-indigo-600' },
+};
+
+const slides = [
+    {
+        bg: 'from-green-900 to-green-700',
+        title: 'میزهای حرفه‌ای',
+        subtitle: 'بهترین برندهای ایران و جهان',
+        badge: 'تا ۲۰٪ تخفیف',
+        badgeColor: 'bg-yellow-400 text-yellow-900',
+        icon: <Package size={120} className="text-green-300 opacity-20" />,
+    },
+    {
+        bg: 'from-blue-900 to-blue-700',
+        title: 'چوب‌های حرفه‌ای',
+        subtitle: 'Predator، Mezz، Riley و بیشتر',
+        badge: 'ارسال رایگان',
+        badgeColor: 'bg-blue-300 text-blue-900',
+        icon: <SlidersHorizontal size={120} className="text-blue-300 opacity-20" />,
+    },
+    {
+        bg: 'from-purple-900 to-purple-700',
+        title: 'فروش ویژه فصل',
+        subtitle: 'محصولات منتخب با تخفیف استثنایی',
+        badge: 'محدود',
+        badgeColor: 'bg-red-400 text-white',
+        icon: <Trophy size={120} className="text-purple-300 opacity-20" />,
+    },
+];
+
+const sampleProducts: Product[] = [
+    { id: '1', title: 'میز اسنوکر ویراکا مدل M1 Gold حرفه‌ای', price: 85000000, discountPrice: 72000000, discountPercent: 15, category: 'table', condition: 'new', city: 'تهران', images: [], isVerified: true, isOfficialStore: false, isDailyDeal: false, isSpecialSale: false, seller: { firstName: 'علی', lastName: 'محمدی', primaryRole: 'seller' } },
+    { id: '2', title: 'چوب بیلیارد حرفه‌ای Predator 314-3', price: 12000000, discountPrice: undefined, discountPercent: 0, category: 'cue', condition: 'like_new', city: 'مشهد', images: [], isVerified: true, isOfficialStore: false, isDailyDeal: true, isSpecialSale: false, seller: { firstName: 'رضا', lastName: 'احمدی', primaryRole: 'player' } },
+    { id: '3', title: 'ست توپ اسنوکر Aramith Tournament', price: 4500000, discountPrice: 3800000, discountPercent: 16, category: 'ball', condition: 'new', city: 'اصفهان', images: [], isVerified: false, isOfficialStore: true, isDailyDeal: true, isSpecialSale: false, seller: { firstName: 'بیلیارد', lastName: 'پلاس', primaryRole: 'admin' } },
+    { id: '4', title: 'گچ بیلیارد Master Blue Diamond - ۱۴۴ عدد', price: 850000, discountPrice: undefined, discountPercent: 0, category: 'accessory', condition: 'new', city: 'تهران', images: [], isVerified: false, isOfficialStore: false, isDailyDeal: false, isSpecialSale: true, seller: { firstName: 'محمد', lastName: 'حسینی', primaryRole: 'seller' } },
+    { id: '5', title: 'پایه چوب بیلیارد چرمی دستی', price: 2200000, discountPrice: 1900000, discountPercent: 14, category: 'accessory', condition: 'new', city: 'تهران', images: [], isVerified: false, isOfficialStore: false, isDailyDeal: false, isSpecialSale: true, seller: { firstName: 'امیر', lastName: 'کریمی', primaryRole: 'manufacturer' } },
+    { id: '6', title: 'میز پاکت بیلیارد ۷ فوت ایرانی', price: 35000000, discountPrice: undefined, discountPercent: 0, category: 'table', condition: 'used', city: 'شیراز', images: [], isVerified: false, isOfficialStore: false, isDailyDeal: false, isSpecialSale: false, seller: { firstName: 'حسین', lastName: 'علوی', primaryRole: 'user' } },
+    { id: '7', title: 'کتاب آموزش اسنوکر حرفه‌ای استیو دیویس', price: 350000, discountPrice: 280000, discountPercent: 20, category: 'educational', condition: 'new', city: 'تهران', images: [], isVerified: false, isOfficialStore: true, isDailyDeal: true, isSpecialSale: false, seller: { firstName: 'بیلیارد', lastName: 'پلاس', primaryRole: 'admin' } },
+    { id: '8', title: 'تی‌شرت اسپرت بیلیارد سایز XL', price: 450000, discountPrice: undefined, discountPercent: 0, category: 'clothing', condition: 'new', city: 'تهران', images: [], isVerified: false, isOfficialStore: false, isDailyDeal: false, isSpecialSale: false, seller: { firstName: 'مجید', lastName: 'صادقی', primaryRole: 'seller' } },
+];
+
+function CountdownTimer({ targetDate, dark = false }: { targetDate: Date; dark?: boolean }) {
+    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate.getTime() - now;
+            if (distance > 0) {
+                setTimeLeft({
+                    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                    seconds: Math.floor((distance % (1000 * 60)) / 1000),
+                });
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [targetDate]);
+
+    const pad = (n: number) => n.toLocaleString('fa-IR').padStart(2, '۰');
+    const boxClass = dark
+        ? 'bg-gray-800 text-white border border-gray-700'
+        : 'bg-white text-gray-900 border border-gray-200 shadow-sm';
+
+    return (
+        <div className="flex gap-1.5 items-center">
+            {[
+                { value: timeLeft.days, label: 'روز' },
+                { value: timeLeft.hours, label: 'ساعت' },
+                { value: timeLeft.minutes, label: 'دقیقه' },
+                { value: timeLeft.seconds, label: 'ثانیه' },
+            ].map((item, i) => (
+                <div key={i} className="flex items-center gap-1.5">
+                    <div className={`${boxClass} rounded-xl px-3 py-2 text-center min-w-[3.2rem]`}>
+                        <div className="text-lg font-bold tabular-nums">{pad(item.value)}</div>
+                        <div className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-500'}`}>{item.label}</div>
+                    </div>
+                    {i < 3 && <span className={`font-bold text-xl ${dark ? 'text-gray-500' : 'text-gray-400'}`}>:</span>}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function ProductCard({ product }: { product: Product }) {
+    return (
+        <Link href={`/shop/${product.id}`}>
+            <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col" style={{ height: '320px' }}>
+                <div className="relative bg-gray-50 flex-shrink-0 overflow-hidden" style={{ height: '160px' }}>
+                    {product.images?.length > 0 ? (
+                        <img src={product.images[0]} alt={product.title}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                        <div className="h-full w-full flex items-center justify-center">
+                            <Package size={52} className="text-gray-200" />
+                        </div>
+                    )}
+                    {product.discountPercent > 0 && (
+                        <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1">
+                            <TrendingDown size={10} />
+                            {product.discountPercent.toLocaleString('fa-IR')}٪
+                        </div>
+                    )}
+                    {product.isVerified && (
+                        <div className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-lg flex items-center gap-1">
+                            <CheckCircle size={10} />
+                            تأیید شده
+                        </div>
+                    )}
+                    {product.isOfficialStore && (
+                        <div className="absolute bottom-0 inset-x-0 bg-purple-600 text-white text-xs px-2 py-2 flex items-center gap-1 justify-center">
+                            <Star size={10} />
+                            فروشگاه رسمی بیلیارد پلاس
+                        </div>
+                    )}
+                </div>
+
+                <div className="p-3 flex flex-col flex-1">
+                    <h3 className="font-bold text-gray-800 text-sm leading-5 mb-2 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                        {product.title}
+                    </h3>
+
+                    <div className="flex items-center gap-1.5 mb-2 flex-wrap">
+                        <span className={`text-xs ${roleLabels[product.seller?.primaryRole]?.color || 'text-gray-500'}`}>
+                            {roleLabels[product.seller?.primaryRole]?.label || 'کاربر'}
+                        </span>
+                        <span className="text-gray-200 text-xs">|</span>
+                        <span className="text-xs text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded">
+                            {conditionLabels[product.condition]}
+                        </span>
+                        {product.city && (
+                            <span className="text-xs text-gray-400 flex items-center gap-0.5">
+                                <MapPin size={9} />
+                                {product.city}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="mt-auto pt-2 border-t border-gray-50">
+                        {product.discountPrice ? (
+                            <>
+                                <div className="text-xs text-gray-400 line-through">
+                                    {product.price.toLocaleString('fa-IR')} تومان
+                                </div>
+                                <div className="text-green-700 font-bold text-sm">
+                                    {product.discountPrice.toLocaleString('fa-IR')} تومان
+                                </div>
+                            </>
+                        ) : (
+                            <div className="text-green-700 font-bold text-sm">
+                                {product.price.toLocaleString('fa-IR')} تومان
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
+}
+
+function DealCard({ product }: { product: Product }) {
+    return (
+        <Link href={`/shop/${product.id}`}>
+            <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 group border border-red-100 flex flex-col" style={{ height: '280px' }}>
+                <div className="relative bg-gray-50 flex-shrink-0 flex items-center justify-center overflow-hidden" style={{ height: '140px' }}>
+                    {product.images?.length > 0 ? (
+                        <img src={product.images[0]} alt={product.title}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                        <Package size={48} className="text-gray-200" />
+                    )}
+                    {product.discountPercent > 0 && (
+                        <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
+                            {product.discountPercent.toLocaleString('fa-IR')}٪
+                        </div>
+                    )}
+                </div>
+                <div className="p-3 flex flex-col flex-1">
+                    <h3 className="font-bold text-gray-800 text-xs leading-5 mb-auto overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                        {product.title}
+                    </h3>
+                    <div className="mt-2 pt-2 border-t border-red-50">
+                        {product.discountPrice ? (
+                            <>
+                                <div className="text-xs text-gray-400 line-through">{product.price.toLocaleString('fa-IR')}</div>
+                                <div className="text-red-600 font-bold text-sm">{product.discountPrice.toLocaleString('fa-IR')} تومان</div>
+                            </>
+                        ) : (
+                            <div className="text-green-700 font-bold text-sm">{product.price.toLocaleString('fa-IR')} تومان</div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
+}
+
+export default function ShopPage() {
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [search, setSearch] = useState('');
+    const [condition, setCondition] = useState('');
+    const [onlyVerified, setOnlyVerified] = useState(false);
+    const [sortBy, setSortBy] = useState('newest');
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide(prev => (prev + 1) % slides.length);
+        }, 4000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const specialSaleDate = new Date();
+    specialSaleDate.setDate(specialSaleDate.getDate() + 7);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const dailyDeals = sampleProducts.filter(p => p.isDailyDeal);
+    const specialSaleProducts = sampleProducts.filter(p => p.isSpecialSale);
+
+    const filtered = sampleProducts.filter(p => {
+        if (selectedCategory !== 'all' && p.category !== selectedCategory) return false;
+        if (condition && p.condition !== condition) return false;
+        if (onlyVerified && !p.isVerified) return false;
+        if (search && !p.title.includes(search)) return false;
+        return true;
+    });
+
+    return (
+        <div className="max-w-7xl mx-auto pb-10">
+
+            {/* سرچ */}
+            <div className="mb-8">
+                <div className="relative flex items-center bg-white rounded-full shadow-lg border-2 border-gray-100 hover:border-green-400 transition-colors overflow-hidden">
+                    <div className="pr-6 text-gray-400">
+                        <Search size={20} />
+                    </div>
+                    <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+                        placeholder="جستجو در فروشگاه بیلیارد پلاس..."
+                        className="flex-1 py-4 px-3 text-base focus:outline-none bg-transparent" />
+                    <button className="m-2 bg-green-700 text-white px-8 py-3 rounded-full hover:bg-green-800 flex items-center gap-2 font-medium transition-colors flex-shrink-0">
+                        <Search size={16} />
+                        جستجو
+                    </button>
+                </div>
+            </div>
+
+            {/* دسته‌بندی‌ها */}
+            <div className="flex gap-3 mb-8 overflow-x-auto pb-2">
+                {categories.map(cat => (
+                    <button key={cat.value} onClick={() => setSelectedCategory(cat.value)}
+                        className={`flex items-center gap-2 px-5 py-3 rounded-2xl transition-all flex-shrink-0 font-medium text-sm ${
+                            ? `bg-gradient-to-l ${cat.color} text-white shadow-lg scale-105`
+                                : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 shadow-sm'
+                            }`}>
+                        <span className={selectedCategory === cat.value ? 'text-white' : 'text-gray-500'}>
+                            {cat.icon}
+                        </span>
+                        {cat.label}
+                    </button>
+                ))}
+            </div>
+
+            {/* اسلایدر */}
+            <div className="relative rounded-3xl overflow-hidden mb-8 shadow-xl" style={{ height: '260px' }}>
+                {slides.map((slide, i) => (
+                    <div key={i}
+                        className={`absolute inset-0 bg-gradient-to-l ${slide.bg} transition-all duration-700 ${i === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+                            }`}>
+                        <div className="h-full flex items-center justify-between px-12">
+                            <div>
+                                <span className={`text-xs font-bold px-3 py-1 rounded-full ${slide.badgeColor} mb-4 inline-block`}>
+                                    {slide.badge}
+                                </span>
+                                <h2 className="text-white text-4xl font-bold mb-3">{slide.title}</h2>
+                                <p className="text-white opacity-70 text-lg mb-6">{slide.subtitle}</p>
+                                <button className="bg-white text-green-800 px-8 py-3 rounded-xl font-bold hover:bg-green-50 transition-colors">
+                                    مشاهده همه
+                                </button>
+                            </div>
+                            <div className="opacity-30">
+                                {slide.icon}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+
+                {/* دکمه‌های اسلایدر */}
+                <button onClick={() => setCurrentSlide(p => (p - 1 + slides.length) % slides.length)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all">
+                    <ChevronRight size={20} />
+                </button>
+                <button onClick={() => setCurrentSlide(p => (p + 1) % slides.length)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all">
+                    <ChevronLeft size={20} />
+                </button>
+
+                {/* نقاط */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                    {slides.map((_, i) => (
+                        <button key={i} onClick={() => setCurrentSlide(i)}
+                            className={`rounded-full transition-all ${i === currentSlide ? 'w-6 h-2 bg-white' : 'w-2 h-2 bg-white opacity-40'}`} />
+                    ))}
+                </div>
+            </div>
+
+            {/* بنرهای تبلیغاتی */}
+            <div className="grid grid-cols-3 gap-4 mb-8">
+                <div className="bg-gradient-to-l from-amber-600 to-amber-400 rounded-2xl p-5 text-white flex items-center justify-between">
+                    <div>
+                        <div className="font-bold text-lg">چوب‌های حرفه‌ای</div>
+                        <div className="text-amber-100 text-sm">تا ۳۰٪ تخفیف</div>
+                    </div>
+                    <SlidersHorizontal size={40} className="text-amber-200" />
+                </div>
+                <div className="bg-gradient-to-l from-blue-700 to-blue-500 rounded-2xl p-5 text-white flex items-center justify-between">
+                    <div>
+                        <div className="font-bold text-lg">لوازم جانبی</div>
+                        <div className="text-blue-100 text-sm">قیمت مناسب</div>
+                    </div>
+                    <Wrench size={40} className="text-blue-200" />
+                </div>
+                <div className="bg-gradient-to-l from-purple-700 to-purple-500 rounded-2xl p-5 text-white flex items-center justify-between">
+                    <div>
+                        <div className="font-bold text-lg">محصولات آموزشی</div>
+                        <div className="text-purple-100 text-sm">ارسال رایگان</div>
+                    </div>
+                    <BookOpen size={40} className="text-purple-200" />
+                </div>
+            </div>
+
+            {/* فروش ویژه */}
+            <div className="rounded-3xl mb-8 overflow-hidden shadow-xl" style={{ background: 'linear-gradient(135deg, #e8192c 0%, #c0392b 100%)' }}>
+                <div className="flex" style={{ minHeight: '220px' }}>
+                    {/* ستون عنوان */}
+                    <div className="flex-shrink-0 w-40 flex flex-col items-center justify-center p-5 text-white border-l border-red-400 border-opacity-30">
+                        <div className="text-2xl font-black leading-tight text-center mb-4">
+                            پیشنهاد<br />شگفت‌<br />انگیز
+                        </div>
+                        <div className="bg-black bg-opacity-20 rounded-2xl p-2 mb-3 w-full text-center">
+                            <div className="flex justify-center gap-1 mb-1">
+                                {[
+                                    { v: '۰۶', l: 'روز' },
+                                    { v: '۲۳', l: 'ساعت' },
+                                ].map((t, i) => (
+                                    <div key={i} className="bg-black bg-opacity-30 rounded-lg px-2 py-1 text-center">
+                                        <div className="text-white font-bold text-sm">{t.v}</div>
+                                        <div className="text-red-200 text-xs">{t.l}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="text-white text-5xl font-black opacity-60">%</div>
+                        <Link href="/shop"
+                            className="mt-3 text-white text-xs border border-white border-opacity-40 rounded-lg px-3 py-1.5 hover:bg-white hover:bg-opacity-10 flex items-center gap-1">
+                            مشاهده همه
+                            <ChevronLeft size={12} />
+                        </Link>
+                    </div>
+
+                    {/* محصولات */}
+                    <div className="flex-1 overflow-x-auto">
+                        <div className="flex h-full">
+                            {[...specialSaleProducts, ...sampleProducts.slice(0, 5)].map((product, index) => (
+                                <Link key={`sp-${index}`} href={`/shop/${product.id}`}>
+                                    <div className="bg-white w-44 h-full flex-shrink-0 border-l border-gray-100 last:border-l-0 hover:bg-gray-50 transition-colors flex flex-col">
+                                        <div className="flex-1 flex items-center justify-center p-4">
+                                            {product.images?.length > 0 ? (
+                                                <img src={product.images[0]} alt={product.title} className="max-h-24 object-contain" />
+                                            ) : (
+                                                <Package size={48} className="text-gray-200" />
+                                            )}
+                                        </div>
+                                        <div className="p-3 border-t border-gray-100">
+                                            <div className="text-xs text-gray-700 mb-2 leading-4 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', height: '2rem' }}>
+                                                {product.title}
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    {product.discountPrice ? (
+                                                        <>
+                                                            <div className="text-xs text-gray-400 line-through">{product.price.toLocaleString('fa-IR')}</div>
+                                                            <div className="text-xs font-bold text-gray-800">{product.discountPrice.toLocaleString('fa-IR')}</div>
+                                                        </>
+                                                    ) : (
+                                                        <div className="text-xs font-bold text-gray-800">{product.price.toLocaleString('fa-IR')}</div>
+                                                    )}
+                                                    <div className="text-xs text-gray-400">تومان</div>
+                                                </div>
+                                                {product.discountPercent > 0 && (
+                                                    <div className="bg-red-500 text-white text-xs font-bold w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0">
+                                                        {product.discountPercent.toLocaleString('fa-IR')}٪
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* تخفیف امروز */}
+            <div className="bg-white rounded-3xl border-2 border-red-100 p-6 mb-8">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-red-500 p-2 rounded-xl">
+                            <Zap size={20} className="text-white" />
+                        </div>
+                        <div>
+                            <div className="text-gray-900 font-bold text-xl">تخفیف امروز</div>
+                            <div className="text-gray-400 text-sm flex items-center gap-1">
+                                <Timer size={12} />
+                                فقط تا پایان امروز
+                            </div>
+                        </div>
+                    </div>
+                    <CountdownTimer targetDate={endOfDay} />
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {dailyDeals.map(product => (
+                        <DealCard key={product.id} product={product} />
+                    ))}
+                </div>
+            </div>
+
+            {/* فیلتر + محصولات */}
+            <div className="flex gap-6">
+                <div className="w-56 flex-shrink-0">
+                    <div className="bg-white rounded-2xl shadow-sm p-5 sticky top-4 border border-gray-100">
+                        <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <SlidersHorizontal size={16} />
+                            فیلترها
+                        </h3>
+
+                        <div className="mb-5">
+                            <label className="block text-sm font-medium text-gray-600 mb-3">وضعیت کالا</label>
+                            {[
+                                { value: '', label: 'همه' },
+                                { value: 'new', label: 'نو' },
+                                { value: 'like_new', label: 'در حد نو' },
+                                { value: 'used', label: 'کارکرده' },
+                            ].map(c => (
+                                <label key={c.value} className="flex items-center gap-2 mb-2.5 cursor-pointer group">
+                                    <input type="radio" name="condition" value={c.value}
+                                        checked={condition === c.value}
+                                        onChange={() => setCondition(c.value)}
+                                        className="accent-green-600" />
+                                    <span className="text-sm text-gray-600 group-hover:text-green-700">{c.label}</span>
+                                </label>
+                            ))}
+                        </div>
+
+                        <div className="mb-5 pb-5 border-b border-gray-100">
+                            <label className="flex items-center gap-2 cursor-pointer group">
+                                <input type="checkbox" checked={onlyVerified}
+                                    onChange={e => setOnlyVerified(e.target.checked)}
+                                    className="accent-green-600 w-4 h-4" />
+                                <span className="text-sm text-gray-600 group-hover:text-green-700 flex items-center gap-1">
+                                    <CheckCircle size={14} className="text-green-500" />
+                                    فقط تأیید شده
+                                </span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-600 mb-2">مرتب‌سازی</label>
+                            <select value={sortBy} onChange={e => setSortBy(e.target.value)}
+                                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-50">
+                                <option value="newest">جدیدترین</option>
+                                <option value="cheapest">ارزان‌ترین</option>
+                                <option value="expensive">گران‌ترین</option>
+                                <option value="discount">بیشترین تخفیف</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex-1">
+                    <div className="flex items-center justify-between mb-5">
+                        <div className="flex items-center gap-2">
+                            <h2 className="font-bold text-gray-800 text-lg">
+                                {selectedCategory === 'all' ? 'همه محصولات' : categories.find(c => c.value === selectedCategory)?.label}
+                            </h2>
+                            <span className="text-gray-400 text-sm bg-gray-100 px-2 py-0.5 rounded-lg">
+                                {filtered.length.toLocaleString('fa-IR')} محصول
+                            </span>
+                        </div>
+                        <Link href="/shop/new"
+                            className="bg-green-700 text-white px-5 py-2.5 rounded-xl text-sm hover:bg-green-800 flex items-center gap-2 font-medium shadow-sm">
+                            <ShoppingBag size={16} />
+                            فروش محصول
+                        </Link>
+                    </div>
+
+                    {filtered.length === 0 ? (
+                        <div className="text-center py-20 text-gray-400">
+                            <Package size={48} className="mx-auto mb-4 text-gray-300" />
+                            <p>محصولی پیدا نشد</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {filtered.map(product => (
+                                <ProductCard key={product.id} product={product} />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
