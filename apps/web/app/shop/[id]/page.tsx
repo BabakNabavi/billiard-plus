@@ -55,7 +55,7 @@ const product = {
 function Stars({ rating }: { rating: number }) {
   return (
     <div className="flex gap-0.5">
-      {[1,2,3,4,5].map(i => (
+      {[1, 2, 3, 4, 5].map(i => (
         <Star key={i} size={13} className={i <= Math.round(rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 fill-gray-100'} />
       ))}
     </div>
@@ -100,12 +100,38 @@ export default function ProductPage() {
               )}
             </div>
             <div className="flex gap-2">
-              {[0,1,2,3].map(i => (
+              {[0, 1, 2, 3].map(i => (
                 <button key={i} onClick={() => setActiveImage(i)}
                   className={`w-16 h-16 rounded-xl border-2 flex items-center justify-center bg-gray-50 ${activeImage === i ? 'border-green-500' : 'border-gray-200'}`}>
                   <Package size={20} className="text-gray-300" />
                 </button>
               ))}
+            </div>
+            {/* اشتراک‌گذاری */}
+            <div className="mt-3 bg-white rounded-2xl p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 font-medium">اشتراک‌گذاری</span>
+                <div className="flex gap-2">
+                  {[
+                    { label: 'کپی لینک', icon: <Share2 size={15} /> },
+                    { label: 'تلگرام', icon: <MessageCircle size={15} /> },
+                    { label: 'واتساپ', icon: <Phone size={15} /> },
+                  ].map((item, i) => (
+                    <button key={i} className="flex items-center gap-1 border border-gray-200 text-gray-500 text-xs px-3 py-1.5 rounded-lg hover:border-green-400 hover:text-green-700 transition-colors">
+                      {item.icon}
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* گزارش مشکل */}
+            <div className="mt-3 bg-white rounded-2xl p-4 shadow-sm">
+              <button className="w-full flex items-center justify-between text-sm text-gray-500 hover:text-red-500 transition-colors">
+                <span>گزارش مشکل در محصول</span>
+                <AlertCircle size={16} />
+              </button>
             </div>
           </div>
         </div>
@@ -183,9 +209,8 @@ export default function ProductPage() {
                 { value: 'questions', label: 'پرسش‌ها' },
               ].map(tab => (
                 <button key={tab.value} onClick={() => setActiveTab(tab.value)}
-                  className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${
-                    activeTab === tab.value ? 'border-red-500 text-red-500' : 'border-transparent text-gray-500 hover:text-gray-700'
-                  }`}>
+                  className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${activeTab === tab.value ? 'border-red-500 text-red-500' : 'border-transparent text-gray-500 hover:text-gray-700'
+                    }`}>
                   {tab.label}
                 </button>
               ))}
@@ -335,6 +360,75 @@ export default function ProductPage() {
                 <div className="text-xs text-gray-400">تومان</div>
               </div>
             </Link>
+          ))}
+        </div>
+      </div>
+      {/* نوار ضمانت‌ها */}
+      <div className="mt-6 bg-white rounded-2xl shadow-sm p-6">
+        <div className="grid grid-cols-5 gap-4 divide-x divide-x-reverse divide-gray-100">
+          {[
+            { icon: <Shield size={28} className="text-green-600" />, title: 'ضمانت اصالت کالا', desc: 'تضمین اصل بودن محصول' },
+            { icon: <RotateCcw size={28} className="text-blue-600" />, title: '۷ روز ضمانت بازگشت', desc: 'بازگشت بدون سوال' },
+            { icon: <Truck size={28} className="text-orange-500" />, title: 'ارسال سراسر ایران', desc: 'تحویل درب منزل' },
+            { icon: <Phone size={28} className="text-purple-600" />, title: 'پشتیبانی ۲۴ ساعته', desc: '۷ روز هفته در خدمت شما' },
+            { icon: <MessageCircle size={28} className="text-red-500" />, title: 'مشاوره رایگان', desc: 'راهنمایی تخصصی خرید' },
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center gap-2 text-center px-4">
+              <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center">
+                {item.icon}
+              </div>
+              <div className="font-bold text-sm text-gray-800">{item.title}</div>
+              <div className="text-xs text-gray-400">{item.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* پیشنهاد فروشندگان */}
+      <div className="mt-6 bg-white rounded-2xl shadow-sm p-6">
+        <h3 className="font-bold text-gray-800 text-lg mb-5 flex items-center gap-2">
+          <span className="w-1 h-5 bg-red-500 rounded-full inline-block"></span>
+          پیشنهاد فروشندگان
+        </h3>
+        <div className="space-y-3">
+          {[
+            { name: 'علی محمدی', role: 'فروشگاه', city: 'تهران', price: 72000000, rating: 95, delivery: 'ارسال فروشنده' },
+            { name: 'فروشگاه بیلیارد مرکزی', role: 'فروشگاه', city: 'اصفهان', price: 75000000, rating: 88, delivery: 'ارسال فروشنده از ۳ روز کاری' },
+          ].map((seller, i) => (
+            <div key={i} className="flex items-center justify-between border border-gray-100 rounded-xl p-4 hover:border-green-200 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold flex-shrink-0">
+                  {seller.name[0]}
+                </div>
+                <div>
+                  <div className="font-medium text-sm text-gray-800">{seller.name}</div>
+                  <div className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                    <MapPin size={9} />
+                    {seller.city}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-1">
+                  <Truck size={14} className="text-gray-400" />
+                  <span className="text-xs">{seller.delivery}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Shield size={14} className="text-gray-400" />
+                  <span className="text-xs">گارانتی اصالت</span>
+                </div>
+                <div className="text-xs text-green-600 font-medium">{seller.rating}٪ رضایت</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-left">
+                  <div className="font-bold text-gray-900">{seller.price.toLocaleString('fa-IR')}</div>
+                  <div className="text-xs text-gray-400">تومان</div>
+                </div>
+                <button className="bg-red-500 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-600 transition-colors whitespace-nowrap">
+                  افزودن به سبد
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       </div>
