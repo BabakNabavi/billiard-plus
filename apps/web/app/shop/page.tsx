@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import api from '../../lib/api';
 import {
   Search, ShoppingBag, Star, CheckCircle, MapPin,
   Package, BookOpen, Shirt, Wrench, Circle, LayoutGrid,
@@ -141,7 +142,7 @@ function CountdownTimer({ targetDate }: { targetDate: Date }) {
         { value: timeLeft.minutes, label: 'دقیقه' },
         { value: timeLeft.hours, label: 'ساعت' },
 
-        
+
 
       ].map((item, i) => (
         <div key={i} className="flex items-center gap-1">
@@ -257,12 +258,23 @@ function DealCard({ product }: { product: Product }) {
 }
 
 export default function ShopPage() {
+  const [products, setProducts] = useState<Product[]>(sampleProducts);
+  const [loadingProducts, setLoadingProducts] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [search, setSearch] = useState('');
   const [condition, setCondition] = useState('');
   const [onlyVerified, setOnlyVerified] = useState(false);
   const [sortBy, setSortBy] = useState('newest');
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    setLoadingProducts(true);
+    api.get('/products').then(res => {
+      if (res.data && res.data.length > 0) {
+        setProducts(res.data);
+      }
+    }).catch(() => { }).finally(() => setLoadingProducts(false));
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentSlide(prev => (prev + 1) % slides.length), 4000);
@@ -275,10 +287,10 @@ export default function ShopPage() {
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
 
-  const dailyDeals = sampleProducts.filter(p => p.isDailyDeal);
-  const specialSaleProducts = sampleProducts.filter(p => p.isSpecialSale);
+  const dailyDeals = products.filter(p => p.isDailyDeal);
+  const specialSaleProducts = products.filter(p => p.isSpecialSale);
 
-  const filtered = sampleProducts.filter(p => {
+  const filtered = products.filter(p => {
     if (selectedCategory !== 'all' && p.category !== selectedCategory) return false;
     if (condition && p.condition !== condition) return false;
     if (onlyVerified && !p.isVerified) return false;
