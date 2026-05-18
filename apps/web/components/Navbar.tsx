@@ -128,6 +128,8 @@ export default function Navbar() {
         {/* لینک‌ها */}
         <div className="hidden md:flex items-center gap-5 flex-shrink-0">
           <Link href="/clubs" className="text-sm text-gray-600 hover:text-green-700 transition-colors">باشگاه‌ها</Link>
+          <Link href="/news" className="text-sm text-gray-600 hover:text-green-700 transition-colors">اخبار</Link>
+          <Link href="/events" className="text-sm text-gray-600 hover:text-green-700 transition-colors">مسابقات</Link>
           <Link href="/rankings" className="text-sm text-gray-600 hover:text-green-700 transition-colors">رنکینگ</Link>
           <div className="relative" ref={searchRef}>
             <button onClick={() => setSearchOpen(p => !p)}
