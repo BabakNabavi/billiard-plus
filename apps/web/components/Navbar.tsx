@@ -71,6 +71,12 @@ export default function Navbar() {
                   className="flex items-center gap-2 px-3 py-2.5 hover:bg-gray-50 rounded-xl text-sm text-gray-700">
                   داشبورد
                 </Link>
+                {user.primaryRole === 'admin' && (
+                  <Link href="/admin" onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 hover:bg-red-50 rounded-xl text-sm text-red-600 font-medium">
+                    پنل ادمین
+                  </Link>
+                )}
                 <Link href="/dashboard/shop" onClick={() => setProfileOpen(false)}
                   className="flex items-center gap-2 px-3 py-2.5 hover:bg-gray-50 rounded-xl text-sm text-gray-700">
                   فروشگاه من
