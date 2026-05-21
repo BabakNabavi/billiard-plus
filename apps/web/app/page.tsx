@@ -201,7 +201,7 @@ export default function Home() {
           {/* زیرتیتر */}
           <div className="hero-sub" style={{ marginBottom: '36px', maxWidth: '500px' }}>
             <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.8, margin: 0 }}>
-               اولین پلتفرم تخصصی بیلیارد ایران
+              اولین پلتفرم تخصصی بیلیارد ایران
             </p>
             <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.18)', marginTop: '6px', letterSpacing: '0.15em' }}>
               RESERVE · COMPETE · SHOP · WATCH LIVE
@@ -274,20 +274,60 @@ export default function Home() {
         </div>
       </div>
 
-      {/* بقیه صفحه — کریستالی */}
+
+
+      {/* مرز موج */}
+      <div style={{ position: 'relative', marginTop: '-2px', lineHeight: 0, background: '#0d2016' }}>
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: '80px' }}>
+          <defs>
+            <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#f0faf5" />
+              <stop offset="50%" stopColor="#e8f5ef" />
+              <stop offset="100%" stopColor="#f0faf5" />
+            </linearGradient>
+          </defs>
+          <path d="M0,0 C240,80 480,0 720,50 C960,100 1200,20 1440,60 L1440,80 L0,80 Z" fill="url(#waveGrad)" />
+          <path d="M0,20 C200,70 440,10 680,55 C920,100 1180,15 1440,45 L1440,80 L0,80 Z" fill="#f0faf5" opacity="0.5" />
+        </svg>
+      </div>
+
+
+
+      {/* بقیه صفحه — روشن کریستالی */}
       <div style={{
-        background: 'linear-gradient(180deg, #0d2016 0%, #0f2418 20%, #0b1d13 60%, #0d2016 100%)',
-        color: '#e2e8f0', position: 'relative',
+        background: 'linear-gradient(180deg, #f0faf5 0%, #e8f5ef 30%, #f4faf7 70%, #edf7f2 100%)',
+        color: '#1a2e24',
+        position: 'relative',
       }}>
-        {/* نور کریستالی ثابت */}
+        {/* نور کریستالی */}
         <div style={{
           position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
           background: `
-            radial-gradient(ellipse at 15% 25%, rgba(16,185,129,0.05) 0%, transparent 45%),
-            radial-gradient(ellipse at 85% 75%, rgba(6,182,212,0.04) 0%, transparent 45%),
-            radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.03) 0%, transparent 55%)
+            radial-gradient(ellipse at 15% 25%, rgba(16,185,129,0.06) 0%, transparent 45%),
+            radial-gradient(ellipse at 85% 75%, rgba(6,182,212,0.04) 0%, transparent 45%)
           `,
         }} />
+
+        <style>{`
+          .card-dark {
+            background: rgba(255,255,255,0.7) !important;
+            border: 1px solid rgba(16,185,129,0.12) !important;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            cursor: pointer;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 24px rgba(16,185,129,0.06), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+          }
+          .card-dark:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: rgba(16,185,129,0.3) !important;
+            box-shadow: 0 20px 60px rgba(16,185,129,0.12), 0 0 40px rgba(16,185,129,0.06), inset 0 1px 0 rgba(255,255,255,1) !important;
+            background: rgba(255,255,255,0.9) !important;
+          }
+          .section-title { color: #0f2318 !important; }
+          .section-label { opacity: 0.9; }
+        `}</style>
 
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '80px 24px', position: 'relative', zIndex: 1 }}>
 
@@ -296,9 +336,9 @@ export default function Home() {
             <section style={{ marginBottom: '80px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
                 <div>
-                  <div className="section-label" style={{ color: '#10b981' }}>PREMIUM VENUES</div>
-                  <h2 className="section-title">باشگاه‌های برتر</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #10b981, transparent)' }} />
+                  <div className="section-label" style={{ color: '#10b981', fontSize: '11px', letterSpacing: '0.2em', fontWeight: 600, marginBottom: '8px' }}>PREMIUM VENUES</div>
+                  <h2 className="section-title" style={{ fontSize: '28px', fontWeight: 900, margin: 0, letterSpacing: '-0.01em' }}>باشگاه‌های برتر</h2>
+                  <div style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #10b981, transparent)', marginTop: '8px' }} />
                 </div>
                 <Link href="/clubs" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', opacity: 0.8 }}>
                   مشاهده همه <ChevronLeft size={14} />
@@ -315,18 +355,18 @@ export default function Home() {
                         </div>
                       </div>
                       <div style={{ padding: '16px' }}>
-                        <h3 style={{ fontWeight: 800, color: '#e2e8f0', marginBottom: '8px', fontSize: '15px' }}>{club.name}</h3>
-                        <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '12px' }}>
+                        <h3 style={{ fontWeight: 800, color: '#0f2318', marginBottom: '8px', fontSize: '15px' }}>{club.name}</h3>
+                        <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: '#4b7a5e', marginBottom: '12px' }}>
                           <span>{club.city}</span>
                           <span>{club.tables.toLocaleString('fa-IR')} میز</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div style={{ display: 'flex', gap: '2px' }}>
                             {[1, 2, 3, 4, 5].map(s => (
-                              <Star key={s} size={11} style={{ color: s <= Math.floor(club.rating) ? '#f59e0b' : '#1f2937' }} fill={s <= Math.floor(club.rating) ? '#f59e0b' : 'transparent'} />
+                              <Star key={s} size={11} style={{ color: s <= Math.floor(club.rating) ? '#f59e0b' : '#d1d5db' }} fill={s <= Math.floor(club.rating) ? '#f59e0b' : 'transparent'} />
                             ))}
                           </div>
-                          <span style={{ fontSize: '11px', color: '#10b981', background: 'rgba(16,185,129,0.08)', padding: '3px 10px', borderRadius: '20px', border: '1px solid rgba(16,185,129,0.15)' }}>رزرو آنلاین</span>
+                          <span style={{ fontSize: '11px', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '3px 10px', borderRadius: '20px', border: '1px solid rgba(16,185,129,0.2)' }}>رزرو آنلاین</span>
                         </div>
                       </div>
                     </div>
@@ -345,9 +385,9 @@ export default function Home() {
             <section style={{ marginBottom: '80px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
                 <div>
-                  <div className="section-label" style={{ color: '#f59e0b' }}>UPCOMING EVENTS</div>
-                  <h2 className="section-title">مسابقات پیش رو</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #f59e0b, transparent)' }} />
+                  <div style={{ fontSize: '11px', color: '#d97706', letterSpacing: '0.2em', fontWeight: 600, marginBottom: '8px' }}>UPCOMING EVENTS</div>
+                  <h2 style={{ fontSize: '28px', fontWeight: 900, color: '#0f2318', margin: 0 }}>مسابقات پیش رو</h2>
+                  <div style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #f59e0b, transparent)', marginTop: '8px' }} />
                 </div>
                 <Link href="/events" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', opacity: 0.8 }}>
                   مشاهده همه <ChevronLeft size={14} />
@@ -359,20 +399,20 @@ export default function Home() {
                     <div className="card-dark" style={{ padding: '20px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                         <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: idx === 0 ? '#10b981' : idx === 1 ? '#06b6d4' : '#a78bfa', boxShadow: `0 0 10px ${idx === 0 ? '#10b981' : idx === 1 ? '#06b6d4' : '#a78bfa'}` }} />
-                        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)' }}>{event.date}</span>
+                        <span style={{ fontSize: '12px', color: '#4b7a5e' }}>{event.date}</span>
                       </div>
-                      <h3 style={{ fontWeight: 800, color: '#e2e8f0', marginBottom: '16px', fontSize: '14px', lineHeight: 1.6 }}>{event.title}</h3>
+                      <h3 style={{ fontWeight: 800, color: '#0f2318', marginBottom: '16px', fontSize: '14px', lineHeight: 1.6 }}>{event.title}</h3>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                         <div>
-                          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', marginBottom: '2px' }}>جایزه</div>
-                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#f59e0b' }}>{event.prize}</div>
+                          <div style={{ fontSize: '10px', color: '#6b9e82', marginBottom: '2px' }}>جایزه</div>
+                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#d97706' }}>{event.prize}</div>
                         </div>
                         <div>
-                          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', marginBottom: '2px' }}>ثبت‌نام</div>
-                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#94a3b8' }}>{event.participants.toLocaleString('fa-IR')}/{event.maxParticipants.toLocaleString('fa-IR')}</div>
+                          <div style={{ fontSize: '10px', color: '#6b9e82', marginBottom: '2px' }}>ثبت‌نام</div>
+                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#374151' }}>{event.participants.toLocaleString('fa-IR')}/{event.maxParticipants.toLocaleString('fa-IR')}</div>
                         </div>
                       </div>
-                      <div style={{ height: '2px', background: 'rgba(255,255,255,0.06)', borderRadius: '1px' }}>
+                      <div style={{ height: '2px', background: 'rgba(16,185,129,0.1)', borderRadius: '1px' }}>
                         <div style={{ height: '100%', background: idx === 0 ? '#10b981' : idx === 1 ? '#06b6d4' : '#a78bfa', borderRadius: '1px', width: `${(event.participants / event.maxParticipants) * 100}%` }} />
                       </div>
                     </div>
@@ -387,9 +427,9 @@ export default function Home() {
             <section style={{ marginBottom: '80px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
                 <div>
-                  <div className="section-label" style={{ color: '#06b6d4' }}>LATEST NEWS</div>
-                  <h2 className="section-title">آخرین اخبار</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #06b6d4, transparent)' }} />
+                  <div style={{ fontSize: '11px', color: '#0891b2', letterSpacing: '0.2em', fontWeight: 600, marginBottom: '8px' }}>LATEST NEWS</div>
+                  <h2 style={{ fontSize: '28px', fontWeight: 900, color: '#0f2318', margin: 0 }}>آخرین اخبار</h2>
+                  <div style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #06b6d4, transparent)', marginTop: '8px' }} />
                 </div>
                 <Link href="/news" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', opacity: 0.8 }}>
                   مشاهده همه <ChevronLeft size={14} />
@@ -401,15 +441,15 @@ export default function Home() {
                     <div className="card-dark">
                       <div style={{ height: '130px', background: `linear-gradient(135deg, ${i === 0 ? '#1a0a0a, #2d0f0f' : i === 1 ? '#0a0f1a, #0f1d2d' : '#0a1a0a, #0f2d0f'})`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                         <div style={{ fontSize: '36px', opacity: 0.1 }}>📰</div>
-                        <div style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', color: news.categoryColor, background: `${news.categoryColor}15`, border: `1px solid ${news.categoryColor}30` }}>
+                        <div style={{ position: 'absolute', top: '10px', right: '10px', fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', color: news.categoryColor, background: `${news.categoryColor}20`, border: `1px solid ${news.categoryColor}40` }}>
                           {news.category}
                         </div>
                       </div>
                       <div style={{ padding: '16px' }}>
-                        <h3 style={{ fontWeight: 700, color: '#e2e8f0', fontSize: '13px', lineHeight: 1.7, marginBottom: '10px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        <h3 style={{ fontWeight: 700, color: '#0f2318', fontSize: '13px', lineHeight: 1.7, marginBottom: '10px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                           {news.title}
                         </h3>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#6b9e82' }}>
                           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Clock size={10} />{news.date}</span>
                           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={10} />{news.views.toLocaleString('fa-IR')}</span>
                         </div>
@@ -426,9 +466,9 @@ export default function Home() {
             <section style={{ marginBottom: '80px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
                 <div>
-                  <div className="section-label" style={{ color: '#a78bfa' }}>PREMIUM EQUIPMENT</div>
-                  <h2 className="section-title">فروشگاه تجهیزات</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #a78bfa, transparent)' }} />
+                  <div style={{ fontSize: '11px', color: '#7c3aed', letterSpacing: '0.2em', fontWeight: 600, marginBottom: '8px' }}>PREMIUM EQUIPMENT</div>
+                  <h2 style={{ fontSize: '28px', fontWeight: 900, color: '#0f2318', margin: 0 }}>فروشگاه تجهیزات</h2>
+                  <div style={{ width: '40px', height: '2px', background: 'linear-gradient(90deg, #a78bfa, transparent)', marginTop: '8px' }} />
                 </div>
                 <Link href="/shop" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', opacity: 0.8 }}>
                   مشاهده همه <ChevronLeft size={14} />
@@ -438,22 +478,22 @@ export default function Home() {
                 {featuredProducts.map(product => (
                   <Link key={product.id} href={`/shop/${product.id}`} style={{ textDecoration: 'none' }}>
                     <div className="card-dark">
-                      <div style={{ height: '110px', background: 'linear-gradient(135deg, #0a1a0f, #071510)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                        <ShoppingBag size={28} style={{ color: 'rgba(16,185,129,0.1)' }} />
+                      <div style={{ height: '110px', background: 'linear-gradient(135deg, #064e3b, #065f46)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                        <ShoppingBag size={28} style={{ color: 'rgba(255,255,255,0.15)' }} />
                         {product.discountPercent > 0 && (
-                          <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(239,68,68,0.15)', color: '#fca5a5', fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '20px', border: '1px solid rgba(239,68,68,0.25)' }}>
+                          <div style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(239,68,68,0.85)', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '20px' }}>
                             {product.discountPercent.toLocaleString('fa-IR')}٪
                           </div>
                         )}
                       </div>
                       <div style={{ padding: '12px' }}>
-                        <h3 style={{ fontWeight: 700, color: '#cbd5e1', fontSize: '12px', lineHeight: 1.6, marginBottom: '8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        <h3 style={{ fontWeight: 700, color: '#0f2318', fontSize: '12px', lineHeight: 1.6, marginBottom: '8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                           {product.title}
                         </h3>
                         {product.discountPrice && (
-                          <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.2)', textDecoration: 'line-through' }}>{product.price.toLocaleString('fa-IR')}</div>
+                          <div style={{ fontSize: '10px', color: '#9ca3af', textDecoration: 'line-through' }}>{product.price.toLocaleString('fa-IR')}</div>
                         )}
-                        <div style={{ fontSize: '13px', fontWeight: 800, color: '#10b981' }}>
+                        <div style={{ fontSize: '13px', fontWeight: 800, color: '#059669' }}>
                           {(product.discountPrice || product.price).toLocaleString('fa-IR')} تومان
                         </div>
                       </div>
@@ -468,39 +508,40 @@ export default function Home() {
           <ScrollReveal delay={0}>
             <section>
               <div style={{
-                background: 'linear-gradient(135deg, rgba(16,185,129,0.07), rgba(6,182,212,0.04), transparent)',
-                border: '1px solid rgba(16,185,129,0.12)',
+                background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.05), rgba(255,255,255,0.5))',
+                border: '1px solid rgba(16,185,129,0.2)',
                 borderRadius: '24px', padding: '64px 40px',
                 textAlign: 'center', position: 'relative', overflow: 'hidden',
                 backdropFilter: 'blur(20px)',
+                boxShadow: '0 8px 40px rgba(16,185,129,0.08)',
               }}>
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '500px', height: '400px', background: 'radial-gradient(ellipse, rgba(16,185,129,0.05), transparent 70%)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '500px', height: '400px', background: 'radial-gradient(ellipse, rgba(16,185,129,0.06), transparent 70%)', pointerEvents: 'none' }} />
                 <div style={{ position: 'relative' }}>
                   <div style={{ fontSize: '11px', color: '#10b981', letterSpacing: '0.2em', marginBottom: '16px', fontWeight: 600 }}>JOIN THE ELITE</div>
-                  <h2 style={{ fontSize: '40px', fontWeight: 900, color: '#f1f5f9', marginBottom: '12px', letterSpacing: '-0.02em' }}>همین الان شروع کن</h2>
-                  <p style={{ color: 'rgba(255,255,255,0.25)', marginBottom: '36px', fontSize: '16px' }}>رایگان ثبت‌نام کن و به جامعه بیلیارد ایران بپیوند</p>
+                  <h2 style={{ fontSize: '40px', fontWeight: 900, color: '#0f2318', marginBottom: '12px', letterSpacing: '-0.02em' }}>همین الان شروع کن</h2>
+                  <p style={{ color: '#4b7a5e', marginBottom: '36px', fontSize: '16px' }}>رایگان ثبت‌نام کن و به جامعه بیلیارد ایران بپیوند</p>
                   <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
                     <Link href="/register">
                       <button style={{
-                        background: 'linear-gradient(135deg, #10b981, #059669)', color: '#000',
+                        background: 'linear-gradient(135deg, #10b981, #059669)', color: '#fff',
                         padding: '14px 32px', borderRadius: '12px', fontSize: '15px', fontWeight: 800,
                         border: 'none', cursor: 'pointer', boxShadow: '0 0 30px rgba(16,185,129,0.3)',
                         transition: 'all 0.3s ease',
                       }}
-                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(16,185,129,0.5)'; }}
+                        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(16,185,129,0.4)'; }}
                         onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(16,185,129,0.3)'; }}>
-                        ثبت‌نام رایگان
+                        ثبت‌ نام
                       </button>
                     </Link>
                     <Link href="/clubs">
                       <button style={{
-                        background: 'transparent', color: '#94a3b8', padding: '14px 32px',
-                        borderRadius: '12px', fontSize: '15px', fontWeight: 700,
-                        border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer',
+                        background: 'rgba(255,255,255,0.8)', color: '#0f2318',
+                        padding: '14px 32px', borderRadius: '12px', fontSize: '15px', fontWeight: 700,
+                        border: '1px solid rgba(16,185,129,0.2)', cursor: 'pointer',
                         display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.3s ease',
                       }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = '#e2e8f0'; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#94a3b8'; }}>
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(16,185,129,0.4)'; e.currentTarget.style.background = '#fff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(16,185,129,0.2)'; e.currentTarget.style.background = 'rgba(255,255,255,0.8)'; }}>
                         <Building2 size={18} /> یافتن باشگاه
                       </button>
                     </Link>
