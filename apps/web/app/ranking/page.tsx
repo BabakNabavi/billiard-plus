@@ -144,7 +144,7 @@ export default function RankingsPage() {
                 </button>
                 {gender === g && (
                   <div className="p-1">
-                    {Object.keys(data[sport][g]).map(cat => (
+                    {Object.keys(data[sport]?.[g] ?? {}).map(cat => (
                       <button key={cat}
                         onClick={() => setCategory(cat)}
                         className={`w-full text-right px-3 py-2 rounded-lg text-sm transition-all ${category === cat

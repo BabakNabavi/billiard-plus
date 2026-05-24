@@ -31,7 +31,7 @@ function toJalali(gy: number, gm: number, gd: number): [number, number, number] 
   gy -= gy <= 1600 ? 621 : 1600;
   const gy2 = gm > 2 ? gy + 1 : gy;
   let days = 365 * gy + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400);
-  for (let i = 0; i < gm - 1; i++) days += g_d_no[i];
+  for (let i = 0; i < gm - 1; i++) days += (g_d_no?.[i] ?? 0);
   days += gd - 1 - 79;
   const j_np = Math.floor(days / 12053);
   days %= 12053;
@@ -39,7 +39,7 @@ function toJalali(gy: number, gm: number, gd: number): [number, number, number] 
   days %= 1461;
   if (days >= 366) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
   let jm = 0;
-  for (let i = 0; i < 11 && days >= j_d_no[i]; i++) { days -= j_d_no[i]; jm++; }
+  for (let i = 0; i < 11 && days >= (j_d_no[i] ?? 0); i++) { days -= (j_d_no[i] ?? 0); jm++; }
   return [jy, jm + 1, days + 1];
 }
 
@@ -54,7 +54,7 @@ const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تی
 const persianDayNames = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
 
 function toFa(n: number | string): string {
-  return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[+d]);
+  return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[+d] ?? d);
 }
 
 function calcDistance(lat1: number, lon1: number, lat2: number, lon2: number): string {
@@ -105,8 +105,8 @@ const clubTables = [
 
 function generateTimeSlots(open: string = '10:00', close: string = '24:00'): string[] {
   const slots: string[] = [];
-  const startH = parseInt(open.split(':')[0]);
-  const endH = close === '24:00' ? 24 : parseInt(close.split(':')[0]);
+  const startH = parseInt(open.split(':')[0] ?? '10');
+  const endH = close === '24:00' ? 24 : parseInt(close.split(':')[0] ?? '24');
   for (let h = startH; h < endH; h++) {
     slots.push(`${String(h).padStart(2, '0')}:00`);
   }
@@ -146,8 +146,9 @@ function ReservationModal({ club, onClose }: { club: Club; onClose: () => void }
   const [selectedGateway, setSelectedGateway] = useState<string | null>(null);
 
   const todayKey = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][today.getDay()];
-  const openTime = club.workingHours?.[todayKey]?.open || '10:00';
-  const closeTime = club.workingHours?.[todayKey]?.close || '24:00';
+  const todayHours = club.workingHours?.[todayKey as keyof typeof club.workingHours];
+  const openTime = todayHours?.open || '10:00';
+  const closeTime = todayHours?.close || '24:00';
   const timeSlots = generateTimeSlots(openTime, closeTime);
 
   const daysInMonth = getJalaliMonthDays(jYear, jMonth);
@@ -195,8 +196,8 @@ function ReservationModal({ club, onClose }: { club: Club; onClose: () => void }
       return;
     }
 
-    const startH = parseInt(startSlot.split(':')[0]);
-    const endH = parseInt(slot.split(':')[0]);
+    const startH = parseInt(startSlot.split(':')[0] ?? '0');
+    const endH = parseInt(slot.split(':')[0] ?? '0');
     const minH = Math.min(startH, endH);
     const maxH = Math.max(startH, endH);
 
@@ -216,37 +217,37 @@ function ReservationModal({ club, onClose }: { club: Club; onClose: () => void }
     (step === 3 && selectedSlots.length > 0) ||
     (step === 4 && selectedGateway !== null);
 
-   const handleNext = async () => {
-  if (step === 1 && selectedJDay) setStep(2);
-  else if (step === 2 && selectedTable) setStep(3);
-  else if (step === 3 && selectedSlots.length > 0) setStep(4);
-  else if (step === 4 && selectedGateway) {
-    setPaying(true);
-    try {
-      // تبدیل تاریخ شمسی به میلادی
-      const [gy, gm, gd] = jalaliToGregorian(jYear, jMonth, selectedJDay!);
-      const bookingDate = `${gy}-${String(gm).padStart(2,'0')}-${String(gd).padStart(2,'0')}`;
+  const handleNext = async () => {
+    if (step === 1 && selectedJDay) setStep(2);
+    else if (step === 2 && selectedTable) setStep(3);
+    else if (step === 3 && selectedSlots.length > 0) setStep(4);
+    else if (step === 4 && selectedGateway) {
+      setPaying(true);
+      try {
+        // تبدیل تاریخ شمسی به میلادی
+        const [gy, gm, gd] = jalaliToGregorian(jYear, jMonth, selectedJDay!);
+        const bookingDate = `${gy}-${String(gm).padStart(2, '0')}-${String(gd).padStart(2, '0')}`;
 
-      await api.post('/bookings', {
-        clubId: club.id,
-        tableId: selectedTable.id,
-        tableBrand: selectedTable.brand,
-        tableType: selectedTable.type,
-        bookingDate,
-        timeSlots: selectedSlots,
-        totalHours: selectedSlots.length,
-        totalPrice: selectedSlots.length * 150000,
-        gateway: selectedGateway,
-      });
+        await api.post('/bookings', {
+          clubId: club.id,
+          tableId: selectedTable!.id,
+          tableBrand: selectedTable!.brand,
+          tableType: selectedTable!.type,
+          bookingDate,
+          timeSlots: selectedSlots,
+          totalHours: selectedSlots.length,
+          totalPrice: selectedSlots.length * 150000,
+          gateway: selectedGateway,
+        });
 
-      setConfirmed(true);
-    } catch (err: any) {
-      alert(err?.response?.data?.message || 'خطا در ثبت رزرو');
-    } finally {
-      setPaying(false);
+        setConfirmed(true);
+      } catch (err: any) {
+        alert(err?.response?.data?.message || 'خطا در ثبت رزرو');
+      } finally {
+        setPaying(false);
+      }
     }
-  }
-};
+  };
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -461,7 +462,7 @@ function ReservationModal({ club, onClose }: { club: Club; onClose: () => void }
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <Clock size={15} style={{ color: selectedTable?.color }} />
                           <span style={{ fontSize: '14px', fontWeight: 800, color: selectedTable?.color }}>
-                            از {toFa(selectedSlots[0])} تا {toFa(`${String(parseInt(selectedSlots[selectedSlots.length - 1].split(':')[0]) + 1).padStart(2, '0')}:00`)}
+                            از {toFa(selectedSlots[0] ?? '')} تا {toFa(`${String(parseInt((selectedSlots[selectedSlots.length - 1] ?? '0').split(':')[0] ?? '0') + 1).padStart(2, '0')}:00`)}
                           </span>
                         </div>
                         <span style={{ fontSize: '13px', fontWeight: 700, color: 'rgba(26,46,36,0.5)', background: 'rgba(255,255,255,0.7)', padding: '4px 12px', borderRadius: '20px' }}>
@@ -591,7 +592,7 @@ function jalaliToGregorian(jy: number, jm: number, jd: number): [number, number,
   let jm2 = jm - 1;
   let jd2 = jd - 1;
   let j_day_no = 365 * jy2 + Math.floor(jy2 / 33) * 8 + Math.floor((jy2 % 33 + 3) / 4);
-  for (let i = 0; i < jm2; i++) j_day_no += [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29][i];
+  for (let i = 0; i < jm2; i++) j_day_no += [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29][i] ?? 0;
   j_day_no += jd2;
   let g_day_no = j_day_no + 79;
   let gy = 1600 + 400 * Math.floor(g_day_no / 146097);
@@ -603,7 +604,7 @@ function jalaliToGregorian(jy: number, jm: number, jd: number): [number, number,
   if (g_day_no >= 366) { leap = false; g_day_no--; gy += Math.floor(g_day_no / 365); g_day_no = g_day_no % 365; }
   const g_days_in_month = [31, 29 * +leap, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   let gm = 0;
-  for (let i = 0; g_day_no >= g_days_in_month[i]; i++) { g_day_no -= g_days_in_month[i]; gm++; }
+  for (let i = 0; g_day_no >= (g_days_in_month[i] ?? 0); i++) { g_day_no -= (g_days_in_month[i] ?? 0); gm++; }
   return [gy, gm + 1, g_day_no + 1];
 }
 
@@ -636,7 +637,7 @@ export default function ClubProfilePage() {
   const images = club.images?.length > 0 ? club.images : ['/images/billiadr-club-1.jpg', '/images/billiadr-club-2.jpg', '/images/billiadr-club-3.jpg'];
   const activeTables = tableTypesList.filter(t => (club as any)[t.key] > 0);
   const todayKey = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][new Date().getDay()];
-  const todayHours = club.workingHours?.[todayKey];
+  const todayHours = club.workingHours?.[todayKey as keyof typeof club.workingHours];
   const mapsUrl = `https://www.google.com/maps?q=${club.latitude},${club.longitude}`;
   const mapEmbedUrl = `https://maps.google.com/maps?q=${club.latitude},${club.longitude}&z=15&output=embed`;
 

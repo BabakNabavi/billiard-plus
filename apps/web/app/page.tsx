@@ -40,6 +40,7 @@ const heroSlides = [
 export default function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [heroSlide, setHeroSlide] = useState(0);
+  const currentSlide = heroSlides[heroSlide] ?? heroSlides[0]!;
   const [scrollY, setScrollY] = useState(0);
   const [videoPlaying, setVideoPlaying] = useState(true);
 
@@ -131,10 +132,10 @@ export default function HomePage() {
         </video>
 
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom,rgba(0,0,0,0.5) 0%,transparent 35%,transparent 55%,rgba(0,0,0,0.7) 100%)', zIndex: 2, pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none', background: `radial-gradient(ellipse at 30% 50%,${heroSlides[heroSlide].accent}14 0%,transparent 60%)`, transition: 'background 1.5s ease' }} />
+        <div style={{ position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none', background: `radial-gradient(ellipse at 30% 50%,${currentSlide.accent}14 0%,transparent 60%)`, transition: 'background 1.5s ease' }} />
 
         {/* خط عمودی — راست */}
-        <div style={{ position: 'absolute', right: '48px', top: '50%', transform: 'translateY(-50%)', width: '2px', height: '90px', zIndex: 5, background: `linear-gradient(to bottom,transparent,${heroSlides[heroSlide].accent},transparent)`, transition: 'background 1.5s ease' }} />
+        <div style={{ position: 'absolute', right: '48px', top: '50%', transform: 'translateY(-50%)', width: '2px', height: '90px', zIndex: 5, background: `linear-gradient(to bottom,transparent,${currentSlide.accent},transparent)`, transition: 'background 1.5s ease' }} />
 
         {/* محتوا — چپ */}
         <div className="hero-pad" style={{
@@ -148,26 +149,26 @@ export default function HomePage() {
 
             <div className="hb" style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: `${heroSlides[heroSlide].accent}18`,
-              border: `1px solid ${heroSlides[heroSlide].accent}40`,
+              background: `${currentSlide.accent}18`,
+              border: `1px solid ${currentSlide.accent}40`,
               borderRadius: '100px', padding: '7px 18px', marginBottom: '20px',
               backdropFilter: 'blur(10px)',
               animation: 'badgePulse 3s infinite',
               transition: 'all 1.5s ease',
             }}>
-              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: heroSlides[heroSlide].accent, boxShadow: `0 0 8px ${heroSlides[heroSlide].accent}` }} />
-              <span style={{ color: heroSlides[heroSlide].accent, fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em' }}>BILLIARD PLUS</span>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: currentSlide.accent, boxShadow: `0 0 8px ${currentSlide.accent}` }} />
+              <span style={{ color: currentSlide.accent, fontSize: '12px', fontWeight: 700, letterSpacing: '0.06em' }}>BILLIARD PLUS</span>
             </div>
 
             <h1 className="ha" style={{
               fontSize: 'clamp(38px,6vw,80px)', fontWeight: 900, color: '#fff',
               lineHeight: 1.08, margin: '0 0 12px', letterSpacing: '-0.03em',
               textShadow: '0 4px 40px rgba(0,0,0,0.4)',
-            }}>{heroSlides[heroSlide].title}</h1>
+            }}>{currentSlide.title}</h1>
 
             <div style={{
               height: '3px', width: '60px',
-              background: `linear-gradient(90deg,${heroSlides[heroSlide].accent},transparent)`,
+              background: `linear-gradient(90deg,${currentSlide.accent},transparent)`,
               borderRadius: '2px', marginBottom: '16px',
               transition: 'background 1.5s ease',
             }} />
@@ -175,16 +176,16 @@ export default function HomePage() {
             <p className="hb" style={{
               fontSize: 'clamp(14px,2vw,19px)', color: 'rgba(255,255,255,0.65)',
               margin: '0 0 32px', lineHeight: 1.75,
-            }}>{heroSlides[heroSlide].sub}</p>
+            }}>{currentSlide.sub}</p>
 
             <div className="hc" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <Link href="/clubs">
                 <button style={{
-                  background: `linear-gradient(135deg,${heroSlides[heroSlide].accent},#059669)`,
+                  background: `linear-gradient(135deg,${currentSlide.accent},#059669)`,
                   color: '#fff', border: 'none', borderRadius: '14px',
                   padding: '13px 30px', fontSize: '14px', fontWeight: 800,
                   cursor: 'pointer', fontFamily: 'inherit',
-                  boxShadow: `0 8px 28px ${heroSlides[heroSlide].accent}50`,
+                  boxShadow: `0 8px 28px ${currentSlide.accent}50`,
                   transition: 'all 0.3s',
                 }}
                   onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; }}
