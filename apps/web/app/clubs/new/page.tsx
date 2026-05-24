@@ -148,10 +148,12 @@ export default function NewClubPage() {
       if (imageFiles.length > 0) {
         setUploadProgress('در حال آپلود عکس‌ها...');
         for (let i = 0; i < imageFiles.length; i++) {
+          const file = imageFiles[i];
+          if (!file) continue;
           const url = await uploadFile(
             'club-media',
-            imageFiles[i],
-            `clubs/${clubId}/images/${i}-${imageFiles[i].name}`
+            file,
+            `clubs/${clubId}/images/${i}-${file.name}`
           );
           if (url) imageUrls.push(url);
         }
