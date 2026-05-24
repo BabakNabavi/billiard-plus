@@ -111,9 +111,8 @@ export default function BookingPage() {
     }
 
     const sortedSlots = [...selectedSlots].sort((a, b) => a - b);
-    const startHour = sortedSlots[0];
-    const endHour = sortedSlots[sortedSlots.length - 1] + 1;
-
+    const startHour = sortedSlots[0] ?? 0;
+    const endHour = (sortedSlots[sortedSlots.length - 1] ?? 0) + 1;
     const startTime = new Date(`${selectedDate}T${startHour.toString().padStart(2, '0')}:00:00Z`);
     const endTime = new Date(`${selectedDate}T${endHour.toString().padStart(2, '0')}:00:00Z`);
 
@@ -181,11 +180,10 @@ export default function BookingPage() {
               <div
                 key={table.id}
                 onClick={() => setSelectedTable(table)}
-                className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
-                  selectedTable?.id === table.id
+                className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${selectedTable?.id === table.id
                     ? 'border-green-600 bg-green-50'
                     : 'border-gray-200 hover:border-green-400'
-                }`}
+                  }`}
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -222,7 +220,7 @@ export default function BookingPage() {
             <input
               type="date"
               value={selectedDate}
-              min={new Date().toISOString().split('T')[0]}
+              min={new Date().toISOString().slice(0, 10)}
               onChange={(e) => setSelectedDate(e.target.value)}
               className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
@@ -261,13 +259,12 @@ export default function BookingPage() {
                   key={slot.hour}
                   onClick={() => toggleSlot(slot.hour, slot.isBooked)}
                   disabled={slot.isBooked}
-                  className={`py-3 rounded-lg text-sm font-medium transition-all ${
-                    slot.isBooked
+                  className={`py-3 rounded-lg text-sm font-medium transition-all ${slot.isBooked
                       ? 'bg-red-100 text-red-500 cursor-not-allowed border border-red-300'
                       : selectedSlots.includes(slot.hour)
-                      ? 'bg-green-600 text-white border border-green-700'
-                      : 'bg-green-50 text-green-700 border border-green-300 hover:bg-green-100'
-                  }`}
+                        ? 'bg-green-600 text-white border border-green-700'
+                        : 'bg-green-50 text-green-700 border border-green-300 hover:bg-green-100'
+                    }`}
                 >
                   {slot.hour}:00
                   {slot.isBooked && <div className="text-xs">مشغول</div>}
