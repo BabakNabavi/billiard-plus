@@ -6,19 +6,17 @@ import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ClubModule } from './modules/club/club.module';
-import { BookingModule } from './modules/booking/booking.module';
 import { ProductModule } from './modules/product/product.module';
+import { BookingsModule } from './bookings/bookings.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       retryAttempts: 10,
       retryDelay: 3000,
       ssl: { rejectUnauthorized: false },
@@ -26,8 +24,8 @@ import { ProductModule } from './modules/product/product.module';
     UserModule,
     AuthModule,
     ClubModule,
-    BookingModule,
     ProductModule,
+    BookingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
