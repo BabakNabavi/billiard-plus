@@ -216,15 +216,37 @@ function ReservationModal({ club, onClose }: { club: Club; onClose: () => void }
     (step === 3 && selectedSlots.length > 0) ||
     (step === 4 && selectedGateway !== null);
 
-  const handleNext = () => {
-    if (step === 1 && selectedJDay) setStep(2);
-    else if (step === 2 && selectedTable) setStep(3);
-    else if (step === 3 && selectedSlots.length > 0) setStep(4);
-    else if (step === 4 && selectedGateway) {
-      setPaying(true);
-      setTimeout(() => { setPaying(false); setConfirmed(true); }, 2500);
+   const handleNext = async () => {
+  if (step === 1 && selectedJDay) setStep(2);
+  else if (step === 2 && selectedTable) setStep(3);
+  else if (step === 3 && selectedSlots.length > 0) setStep(4);
+  else if (step === 4 && selectedGateway) {
+    setPaying(true);
+    try {
+      // تبدیل تاریخ شمسی به میلادی
+      const [gy, gm, gd] = jalaliToGregorian(jYear, jMonth, selectedJDay!);
+      const bookingDate = `${gy}-${String(gm).padStart(2,'0')}-${String(gd).padStart(2,'0')}`;
+
+      await api.post('/bookings', {
+        clubId: club.id,
+        tableId: selectedTable.id,
+        tableBrand: selectedTable.brand,
+        tableType: selectedTable.type,
+        bookingDate,
+        timeSlots: selectedSlots,
+        totalHours: selectedSlots.length,
+        totalPrice: selectedSlots.length * 150000,
+        gateway: selectedGateway,
+      });
+
+      setConfirmed(true);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'خطا در ثبت رزرو');
+    } finally {
+      setPaying(false);
     }
-  };
+  }
+};
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
