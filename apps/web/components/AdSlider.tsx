@@ -70,7 +70,7 @@ export default function AdSlider() {
     const [prev, setPrev] = useState<number | null>(null);
     const [direction, setDirection] = useState<'next' | 'prev'>('next');
     const [animating, setAnimating] = useState(false);
-    const timerRef = useRef<NodeJS.Timeout>();
+    const timerRef = useRef<number | null>(null);
 
     const go = (index: number, dir: 'next' | 'prev') => {
         if (animating) return;
@@ -93,8 +93,8 @@ export default function AdSlider() {
         }, 5000);
         return () => clearInterval(interval);
     }, [current, animating]);
-    const ad = ads[current];
-    const prevAd = prev !== null ? ads[prev] : null;
+    const ad = ads[current]!;
+    const prevAd = prev !== null ? (ads[prev] ?? null) : null;
 
     return (
         <>
