@@ -60,7 +60,7 @@ export default function BookingPage() {
   const [tables, setTables] = useState<Table[]>([]);
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
+    new Date().toISOString().slice(0, 10)
   );
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlots, setSelectedSlots] = useState<number[]>([]);
