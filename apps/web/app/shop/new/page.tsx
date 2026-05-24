@@ -108,9 +108,10 @@ function numberToFarsiWords(num: number): string {
 
   const convert = (n: number): string => {
     if (n === 0) return '';
-    if (n < 20) return ones[n];
-    if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 ? ' و ' + ones[n % 10] : '');
-    return hundreds[Math.floor(n / 100)] + (n % 100 ? ' و ' + convert(n % 100) : '');
+    if (n < 20) return ones[n] ?? '';
+    if (n < 100)
+      return (tens[Math.floor(n / 10)] ?? '') + (n % 10 ? ' و ' + convert(n % 10) : '');
+    return (hundreds[Math.floor(n / 100)] ?? '') + (n % 100 ? ' و ' + convert(n % 100) : '');
   };
 
   if (num >= 1000000000000) return convert(Math.floor(num / 1000000000000)) + ' تریلیون' + (num % 1000000000000 ? ' و ' + numberToFarsiWords(num % 1000000000000) : '');
@@ -145,7 +146,7 @@ export default function NewProductPage() {
 
   const set = (name: string, value: any) => setForm(f => ({ ...f, [name]: value }));
 
-  const toFa = (v: string) => v.replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)]);
+  const toFa = (v: string) => v.replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)] ?? d);
   const toEn = (v: string) => v.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
 
   const handleNumInput = (name: string, v: string) => {
@@ -175,7 +176,9 @@ export default function NewProductPage() {
   };
 
   const updateSpec = (i: number, f: 'label' | 'value', v: string) => {
-    const s = [...form.specs]; s[i][f] = v; set('specs', s);
+    const s = [...form.specs];
+    if (s[i]) s[i]![f] = v;
+    set('specs', s);
   };
 
   const calcDiscount = () => {
@@ -201,7 +204,9 @@ export default function NewProductPage() {
       if (imageFiles.length > 0) {
         setUploadProgress('در حال آپلود عکس‌ها...');
         for (let i = 0; i < imageFiles.length; i++) {
-          const url = await uploadFile('club-media', imageFiles[i], `products/${Date.now()}-${i}-${imageFiles[i].name}`);
+          const file = imageFiles[i];
+          if (!file) continue;
+          const url = await uploadFile('club-media', file, `products/${Date.now()}-${i}-${file.name}`);
           if (url) imageUrls.push(url);
         }
       }
