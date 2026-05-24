@@ -78,7 +78,7 @@ function numberToFarsiWords(num: number): string {
   const hundreds = ['', 'صد', 'دویست', 'سیصد', 'چهارصد', 'پانصد', 'ششصد', 'هفتصد', 'هشتصد', 'نهصد'];
   const convert = (n: number): string => {
     if (n === 0) return '';
-    if (n < 20) return ones[n];
+    if (n < 20) return ones[n] ?? '';
     if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 ? ' و ' + ones[n % 10] : '');
     return hundreds[Math.floor(n / 100)] + (n % 100 ? ' و ' + convert(n % 100) : '');
   };
@@ -107,7 +107,7 @@ export default function EditProductPage() {
     specs: [{ label: '', value: '' }],
   });
 
-  const toFa = (v: string) => v.replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)]);
+  const toFa = (v: string) => v.replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[parseInt(d)] ?? d);
   const toEn = (v: string) => v.replace(/[۰-۹]/g, d => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
 
   const formatNumber = (v: string) => {
@@ -161,7 +161,9 @@ export default function EditProductPage() {
   };
 
   const updateSpec = (i: number, f: 'label' | 'value', v: string) => {
-    const s = [...form.specs]; s[i][f] = v; set('specs', s);
+    const s = [...form.specs];
+    if (s[i]) s[i]![f] = v;
+    set('specs', s);
   };
 
   const calcDiscount = () => {
@@ -177,7 +179,9 @@ export default function EditProductPage() {
     try {
       const newUrls: string[] = [];
       for (let i = 0; i < newImageFiles.length; i++) {
-        const url = await uploadFile('club-media', newImageFiles[i], `products/${Date.now()}-${i}-${newImageFiles[i].name}`);
+        const file = newImageFiles[i];
+        if (!file) continue;
+        const url = await uploadFile('club-media', file, `products/${Date.now()}-${i}-${file.name}`);
         if (url) newUrls.push(url);
       }
       await api.put(`/products/${id}`, {
