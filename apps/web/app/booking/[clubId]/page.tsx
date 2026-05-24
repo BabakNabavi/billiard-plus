@@ -291,7 +291,7 @@ export default function BookingPage() {
             <div className="flex justify-between">
               <span className="text-gray-600">ساعت:</span>
               <span className="font-medium">
-                {selectedSlots[0]}:00 تا {selectedSlots[selectedSlots.length - 1] + 1}:00
+                {selectedSlots[0] ?? 0}:00 تا {(selectedSlots[selectedSlots.length - 1] ?? 0) + 1}:00
               </span>
             </div>
             <div className="flex justify-between">
