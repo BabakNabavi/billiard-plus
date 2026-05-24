@@ -55,6 +55,7 @@ export default function NewsDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const news = sampleNews.find(n => n.id === id) || sampleNews[0];
+  if (!news) return null;
 
   return (
     <div className="max-w-6xl mx-auto pb-10">
