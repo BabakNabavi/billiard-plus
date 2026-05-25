@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Star, Building2, ShoppingBag, Clock, Eye, Play, Pause, ArrowLeft, Zap, Trophy, MapPin } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal/ScrollReveal';
+import { PlatformStats }   from '../components/sections/PlatformStats';
+import { FederationBadge } from '../components/sections/FederationBadge';
+import { RecentActivity }  from '../components/sections/RecentActivity';
+import { TrustBar }        from '../components/sections/TrustBar';
 
 const img1 = '/images/billiadr-club-1.jpg';
 const img3 = '/images/billiadr-club-3.jpg';
@@ -327,6 +331,7 @@ export default function HomePage() {
           <div style={{ width: '1px', height: '40px', background: `linear-gradient(to bottom, ${currentSlide.accent}45, transparent)`, animation: 'scrollHint 2.5s ease infinite' }} />
         </div>
       </div>
+      <TrustBar />
 
       {/* ==================== DARK CONTENT ==================== */}
       <div style={{ background: 'linear-gradient(180deg, #050c08 0%, #070e0a 50%, #050c08 100%)', position: 'relative' }}>
@@ -411,6 +416,7 @@ export default function HomePage() {
               </div>
             </section>
           </ScrollReveal>
+          <PlatformStats />
 
           {/* ===== EVENTS ===== */}
           <ScrollReveal delay={0}>
@@ -479,6 +485,7 @@ export default function HomePage() {
               </div>
             </section>
           </ScrollReveal>
+          <RecentActivity />
 
           {/* ===== SHOP ===== */}
           <ScrollReveal delay={0}>
@@ -516,6 +523,7 @@ export default function HomePage() {
               </div>
             </section>
           </ScrollReveal>
+          <FederationBadge />
 
           {/* ===== CTA ===== */}
           <ScrollReveal delay={0}>
