@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { ToastProvider } from '../components/ui/Toast';
+// ...
+<ToastProvider />
 
 export const metadata: Metadata = {
   title: "بیلیارد پلاس",
@@ -34,12 +37,14 @@ export default function RootLayout({
           ::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.5); }
         `}</style>
       </head>
+      
       <body style={{ backgroundColor: '#030a06', margin: 0, padding: 0 }}>
         <Navbar />
         <main>
           {children}
         </main>
         <Footer />
+        
       </body>
     </html>
   );

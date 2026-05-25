@@ -869,3 +869,14 @@ img[loading="lazy"] {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
+/* Skeleton shimmer */
+@keyframes skeletonShimmer {
+  from { background-position: -200% center; }
+  to   { background-position:  200% center; }
+}
+
+/* Toast progress */
+@keyframes toastProgress {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
