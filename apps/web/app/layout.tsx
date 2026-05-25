@@ -17,8 +17,15 @@ export default function RootLayout({
     <html lang="fa" dir="rtl">
       <head>
         <style>{`
-          * { font-family: 'Vazirmatn', system-ui, sans-serif !important; }
-          input, select, textarea, button { font-family: 'Vazirmatn', system-ui, sans-serif !important; }
+          @font-face {
+            font-family: 'Estedad';
+            src: url('/fonts/Estedad-Medium.woff2') format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+          }
+          * { font-family: 'Estedad', 'Vazirmatn', system-ui, sans-serif !important; }
+          input, select, textarea, button { font-family: 'Estedad', 'Vazirmatn', system-ui, sans-serif !important; }
           * { box-sizing: border-box; }
           body { margin: 0; padding: 0; }
           ::-webkit-scrollbar { width: 6px; }
