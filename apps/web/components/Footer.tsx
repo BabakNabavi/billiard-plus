@@ -49,16 +49,7 @@ export default function Footer() {
         }
       `}</style>
 
-      {/* موج بالای فوتر */}
-      <div style={{ position: 'relative', lineHeight: 0, background: '#edf7f2' }}>
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none"
-          style={{ display: 'block', width: '100%', height: '60px' }}>
-          <path d="M0,60 C240,0 480,60 720,20 C960,-20 1200,50 1440,10 L1440,60 L0,60 Z"
-            fill="#020806" />
-          <path d="M0,60 C200,10 440,55 680,25 C920,-5 1180,45 1440,20 L1440,60 L0,60 Z"
-            fill="#020806" opacity="0.5" />
-        </svg>
-      </div>
+      
 
       <footer style={{
         backgroundColor: '#020806',

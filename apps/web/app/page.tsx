@@ -2,64 +2,105 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, Star, Building2, ShoppingBag, Clock, Eye, Play, Pause, ArrowLeft, Zap } from 'lucide-react';
+import { Star, Building2, ShoppingBag, Clock, Eye, Play, Pause, ArrowLeft, Zap, Trophy, MapPin } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal/ScrollReveal';
 
+const img1 = '/images/billiadr-club-1.jpg';
+const img3 = '/images/billiadr-club-3.jpg';
+
 const featuredClubs = [
-  { id: '1', name: 'باشگاه ستاره تهران', city: 'تهران', tables: 12, rating: 4.8, type: 'اسنوکر', img: '/images/billiadr-club-1.jpg' },
-  { id: '2', name: 'باشگاه المپیک مشهد', city: 'مشهد', tables: 8, rating: 4.6, type: 'پاکت', img: '/images/billiadr-club-2.jpg' },
-  { id: '3', name: 'باشگاه پیروزی اصفهان', city: 'اصفهان', tables: 10, rating: 4.7, type: 'هی‌بال', img: '/images/billiadr-club-3.jpg' },
+  { id: '1', name: 'باشگاه ستاره تهران', city: 'تهران', tables: 12, rating: 4.8, type: 'اسنوکر', img: img1 },
+  { id: '2', name: 'باشگاه المپیک مشهد', city: 'مشهد', tables: 8, rating: 4.6, type: 'پاکت', img: img3 },
+  { id: '3', name: 'باشگاه پیروزی اصفهان', city: 'اصفهان', tables: 10, rating: 4.7, type: 'هی‌بال', img: img1 },
 ];
 
 const upcomingEvents = [
-  { id: '1', title: 'مسابقات سراسری اسنوکر ایران ۱۴۰۴', date: '۱۵ خرداد ۱۴۰۴', prize: '۵۰ میلیون', participants: 48, maxParticipants: 64, color: '#10b981' },
-  { id: '2', title: 'جام بیلیارد پاکت تهران', date: '۲۲ خرداد ۱۴۰۴', prize: '۳۰ میلیون', participants: 24, maxParticipants: 32, color: '#06b6d4' },
-  { id: '3', title: 'لیگ هی‌بال استان‌ها', date: '۱ تیر ۱۴۰۴', prize: '۲۰ میلیون', participants: 16, maxParticipants: 24, color: '#a78bfa' },
+  { id: '1', title: 'مسابقات سراسری اسنوکر ایران ۱۴۰۴', date: '۱۵ خرداد ۱۴۰۴', prize: '۵۰ میلیون', participants: 48, maxParticipants: 64, color: '#10b981', tag: 'Grand Prix' },
+  { id: '2', title: 'جام بیلیارد پاکت تهران', date: '۲۲ خرداد ۱۴۰۴', prize: '۳۰ میلیون', participants: 24, maxParticipants: 32, color: '#06b6d4', tag: 'Championship' },
+  { id: '3', title: 'لیگ هی‌بال استان‌ها', date: '۱ تیر ۱۴۰۴', prize: '۲۰ میلیون', participants: 16, maxParticipants: 24, color: '#a78bfa', tag: 'League' },
 ];
 
 const latestNews = [
-  { id: '1', title: 'برگزاری اولین دوره مسابقات بین‌المللی بیلیارد در تهران', date: '۵ خرداد ۱۴۰۴', views: 2341, category: 'مسابقات', categoryColor: '#10b981', img: '/images/billiadr-club-1.jpg' },
-  { id: '2', title: 'معرفی جدیدترین میزهای اسنوکر وارداتی به بازار ایران', date: '۳ خرداد ۱۴۰۴', views: 1876, category: 'تجهیزات', categoryColor: '#06b6d4', img: '/images/billiadr-club-2.jpg' },
-  { id: '3', title: 'آکادمی بیلیارد پلاس؛ آموزش آنلاین برای مبتدیان', date: '۱ خرداد ۱۴۰۴', views: 3102, category: 'آموزش', categoryColor: '#a78bfa', img: '/images/billiadr-club-3.jpg' },
+  { id: '1', title: 'برگزاری اولین دوره مسابقات بین‌المللی بیلیارد در تهران', date: '۵ خرداد ۱۴۰۴', views: 2341, category: 'مسابقات', categoryColor: '#10b981', img: img1 },
+  { id: '2', title: 'معرفی جدیدترین میزهای اسنوکر وارداتی به بازار ایران', date: '۳ خرداد ۱۴۰۴', views: 1876, category: 'تجهیزات', categoryColor: '#06b6d4', img: img3 },
+  { id: '3', title: 'آکادمی بیلیارد پلاس؛ آموزش آنلاین برای مبتدیان', date: '۱ خرداد ۱۴۰۴', views: 3102, category: 'آموزش', categoryColor: '#a78bfa', img: img1 },
 ];
 
 const featuredProducts = [
-  { id: '1', title: 'چوب بیلیارد Predator 314-3', price: 12000000, discountPrice: 9600000, discountPercent: 20, img: '/images/billiadr-club-1.jpg' },
-  { id: '2', title: 'ست توپ Aramith Tournament', price: 4500000, discountPrice: 3800000, discountPercent: 16, img: '/images/billiadr-club-2.jpg' },
-  { id: '3', title: 'میز اسنوکر Viraka M1 Gold', price: 85000000, discountPrice: 72000000, discountPercent: 15, img: '/images/billiadr-club-3.jpg' },
-  { id: '4', title: 'گچ Master Blue Diamond', price: 850000, discountPrice: 680000, discountPercent: 20, img: '/images/billiadr-club-1.jpg' },
+  { id: '1', title: 'چوب Predator 314-3', price: 12000000, discountPrice: 9600000, discountPercent: 20, img: img1, brand: 'PREDATOR' },
+  { id: '2', title: 'ست توپ Aramith Pro', price: 4500000, discountPrice: 3800000, discountPercent: 16, img: img3, brand: 'ARAMITH' },
+  { id: '3', title: 'میز Viraka M1 Gold', price: 85000000, discountPrice: 72000000, discountPercent: 15, img: img1, brand: 'VIRAKA' },
+  { id: '4', title: 'گچ Master Blue Diamond', price: 850000, discountPrice: 680000, discountPercent: 20, img: img3, brand: 'MASTER' },
 ];
 
 const heroSlides = [
-  { img: '/images/billiadr-club-1.jpg', title: 'بیلیارد پلاس', sub: 'اولین پلتفرم جامع تخصصی بیلیارد ایران', accent: '#10b981' },
-  { img: '/images/billiadr-club-2.jpg', title: 'رزرو آنلاین', sub: 'میز مورد نظرت رو همین الان رزرو کن', accent: '#06b6d4' },
-  { img: '/images/billiadr-club-3.jpg', title: 'مسابقات حرفه‌ای', sub: 'در بزرگ‌ترین رویدادهای بیلیارد ایران شرکت کن', accent: '#a78bfa' },
-  { img: '/images/billiadr-club-3.jpg', title: 'فروشگاه تجهیزات', sub: 'در بزرگ‌ترین رویدادهای بیلیارد ایران شرکت کن', accent: '#a78bfa' },
-
+  { img: img1, title: 'بیلیارد پلاس', sub: 'اولین اکوسیستم جامع بیلیارد ایران', accent: '#10b981', tag: 'PLATFORM' },
+  { img: img3, title: 'رزرو آنلاین', sub: 'بهترین باشگاه‌ها در یک کلیک', accent: '#06b6d4', tag: 'BOOKING' },
+  { img: img1, title: 'مسابقات حرفه‌ای', sub: 'رقابت در بزرگ‌ترین رویدادهای بیلیارد ایران', accent: '#a78bfa', tag: 'TOURNAMENTS' },
 ];
 
-// Dark glass card component
-function DarkCard({ children, style = {}, hoverGlow = '#10b981' }: { children: React.ReactNode; style?: React.CSSProperties; hoverGlow?: string }) {
+function DarkCard({ children, style = {}, hoverGlow = '#10b981' }: {
+  children: React.ReactNode; style?: React.CSSProperties; hoverGlow?: string;
+}) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: hovered ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.03)',
-        border: `1px solid ${hovered ? `${hoverGlow}40` : 'rgba(255,255,255,0.08)'}`,
+        background: hovered ? 'rgba(255,255,255,0.055)' : 'rgba(255,255,255,0.03)',
+        border: `1px solid ${hovered ? `${hoverGlow}35` : 'rgba(255,255,255,0.07)'}`,
         borderRadius: '20px',
         backdropFilter: 'blur(24px)',
         boxShadow: hovered
-          ? `0 0 0 1px ${hoverGlow}20, 0 20px 60px rgba(0,0,0,0.5), 0 0 40px ${hoverGlow}10`
+          ? `0 0 0 1px ${hoverGlow}15, 0 24px 64px rgba(0,0,0,0.55), 0 0 48px ${hoverGlow}08`
           : '0 4px 24px rgba(0,0,0,0.3)',
-        transition: 'all 0.4s cubic-bezier(0.4,0,0.2,1)',
-        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
+        transition: 'all 0.45s cubic-bezier(0.4,0,0.2,1)',
+        transform: hovered ? 'translateY(-7px)' : 'translateY(0)',
         overflow: 'hidden',
+        position: 'relative',
         ...style,
       }}
     >
-      {children}
+      {/* shimmer on hover */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+        background: hovered
+          ? `linear-gradient(105deg, transparent 20%, ${hoverGlow}06 50%, transparent 80%)`
+          : 'transparent',
+        transition: 'background 0.6s ease',
+      }} />
+      <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function SectionHeader({ label, title, labelColor, lineColor, href }: {
+  label: string; title: string; labelColor: string; lineColor: string; href: string;
+}) {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
+      <div>
+        <div style={{ fontSize: '9px', letterSpacing: '0.28em', fontWeight: 700, color: labelColor, marginBottom: '10px', textTransform: 'uppercase', opacity: 0.8 }}>
+          {label}
+        </div>
+        <h2 style={{ fontSize: 'clamp(22px,3vw,28px)', fontWeight: 900, color: '#f0faf5', margin: 0, letterSpacing: '-0.025em', lineHeight: 1.1 }}>
+          {title}
+        </h2>
+        <div style={{ height: '1px', width: '52px', marginTop: '14px', background: `linear-gradient(90deg, ${lineColor}, transparent)`, boxShadow: `0 0 10px ${lineColor}80` }} />
+      </div>
+      <Link href={href} style={{
+        display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px',
+        color: 'rgba(255,255,255,0.35)', textDecoration: 'none',
+        transition: 'color 0.2s',
+        fontWeight: 500, letterSpacing: '0.03em',
+      }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = labelColor; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)'; }}>
+        مشاهده همه <ArrowLeft size={13} />
+      </Link>
     </div>
   );
 }
@@ -90,14 +131,10 @@ export default function HomePage() {
     <>
       <style>{`
         :root {
-          --dark-bg: #060d0a;
-          --dark-surface: #0a1410;
-          --dark-card: rgba(255,255,255,0.03);
-          --green-neon: #10b981;
-          --green-glow: rgba(16,185,129,0.15);
+          --accent: #10b981;
           --text-primary: #f0faf5;
-          --text-secondary: rgba(240,250,245,0.55);
-          --text-muted: rgba(240,250,245,0.3);
+          --text-secondary: rgba(240,250,245,0.5);
+          --text-muted: rgba(240,250,245,0.25);
         }
 
         @keyframes heroFadeIn {
@@ -105,107 +142,70 @@ export default function HomePage() {
           to   { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
         }
         @keyframes neonPulse {
-          0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5), 0 0 20px rgba(16,185,129,0.2); }
-          50%      { box-shadow: 0 0 0 6px rgba(16,185,129,0), 0 0 40px rgba(16,185,129,0.4); }
+          0%,100% { opacity:1; box-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }
+          50%      { opacity:0.6; box-shadow: 0 0 16px currentColor, 0 0 32px currentColor; }
         }
         @keyframes scrollHint {
-          0%,100% { transform:translateY(0); opacity:0.8; }
-          50%      { transform:translateY(10px); opacity:0.2; }
+          0%,100% { transform:translateY(0); opacity:0.7; }
+          50%      { transform:translateY(10px); opacity:0.15; }
         }
         @keyframes ambientFloat {
-          0%,100% { transform: translate(0,0) scale(1); }
-          33%      { transform: translate(30px,-20px) scale(1.05); }
-          66%      { transform: translate(-20px,15px) scale(0.98); }
+          0%,100% { transform: translate(0,0); }
+          33%      { transform: translate(24px,-18px); }
+          66%      { transform: translate(-18px,12px); }
         }
-        @keyframes lineReveal {
-          from { width:0; opacity:0; }
-          to   { width:60px; opacity:1; }
-        }
-        @keyframes fadeSlideUp {
-          from { opacity:0; transform:translateY(24px); }
-          to   { opacity:1; transform:translateY(0); }
+        @keyframes borderGlow {
+          0%,100% { opacity:0.3; }
+          50%      { opacity:0.8; }
         }
 
-        .ha { animation: heroFadeIn 1.4s cubic-bezier(0.22,1,0.36,1) 0.2s both; }
-        .hb { animation: heroFadeIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.5s both; }
-        .hc { animation: heroFadeIn 1s cubic-bezier(0.22,1,0.36,1) 0.8s both; }
-        .hd { animation: heroFadeIn 1s cubic-bezier(0.22,1,0.36,1) 1.1s both; }
-
-        .section-label {
-          font-size: 10px;
-          letter-spacing: 0.25em;
-          font-weight: 700;
-          text-transform: uppercase;
-          margin-bottom: 10px;
-        }
-        .section-title {
-          font-size: clamp(22px,3vw,30px);
-          font-weight: 900;
-          color: var(--text-primary);
-          margin: 0;
-          letter-spacing: -0.02em;
-        }
-        .section-line {
-          height: 1px;
-          width: 60px;
-          margin-top: 12px;
-          border-radius: 1px;
-          animation: lineReveal 0.8s ease both;
-        }
+        .ha { animation: heroFadeIn 1.4s cubic-bezier(0.22,1,0.36,1) 0.15s both; }
+        .hb { animation: heroFadeIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.45s both; }
+        .hc { animation: heroFadeIn 1s cubic-bezier(0.22,1,0.36,1) 0.75s both; }
+        .hd { animation: heroFadeIn 1s cubic-bezier(0.22,1,0.36,1) 1.05s both; }
 
         .neon-btn {
           background: linear-gradient(135deg, #10b981, #059669);
-          color: #fff;
-          border: none;
-          border-radius: 14px;
-          padding: 13px 30px;
-          font-size: 14px;
-          font-weight: 800;
-          cursor: pointer;
-          font-family: inherit;
-          position: relative;
-          overflow: hidden;
-          transition: all 0.3s ease;
-          box-shadow: 0 0 0 1px rgba(16,185,129,0.3), 0 8px 32px rgba(16,185,129,0.3);
+          color: #fff; border: none; border-radius: 12px;
+          padding: 13px 28px; font-size: 14px; font-weight: 800;
+          cursor: pointer; font-family: inherit; position: relative; overflow: hidden;
+          transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+          box-shadow: 0 0 0 1px rgba(16,185,129,0.25), 0 8px 28px rgba(16,185,129,0.25);
+          letter-spacing: 0.01em;
         }
-        .neon-btn::before {
+        .neon-btn::after {
           content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-          opacity: 0;
-          transition: opacity 0.3s;
+          position: absolute; inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 50%);
+          opacity: 0; transition: opacity 0.3s;
         }
         .neon-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 0 0 1px rgba(16,185,129,0.5), 0 12px 40px rgba(16,185,129,0.45), 0 0 60px rgba(16,185,129,0.15);
+          transform: translateY(-2px);
+          box-shadow: 0 0 0 1px rgba(16,185,129,0.45), 0 12px 36px rgba(16,185,129,0.4), 0 0 60px rgba(16,185,129,0.12);
         }
-        .neon-btn:hover::before { opacity: 1; }
+        .neon-btn:hover::after { opacity: 1; }
+        .neon-btn:active { transform: translateY(0) scale(0.98); }
 
         .ghost-btn {
-          background: rgba(255,255,255,0.04);
-          color: var(--text-primary);
-          border: 1px solid rgba(255,255,255,0.15);
-          border-radius: 14px;
-          padding: 13px 30px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          backdrop-filter: blur(10px);
-          transition: all 0.3s ease;
-          font-family: inherit;
+          background: rgba(255,255,255,0.04); color: var(--text-primary);
+          border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+          padding: 13px 28px; font-size: 14px; font-weight: 600;
+          cursor: pointer; backdrop-filter: blur(12px);
+          transition: all 0.35s cubic-bezier(0.4,0,0.2,1); font-family: inherit;
+          letter-spacing: 0.01em;
         }
         .ghost-btn:hover {
-          background: rgba(255,255,255,0.08);
-          border-color: rgba(16,185,129,0.4);
-          box-shadow: 0 0 20px rgba(16,185,129,0.1);
+          background: rgba(255,255,255,0.07);
+          border-color: rgba(16,185,129,0.35);
+          box-shadow: 0 0 24px rgba(16,185,129,0.08);
         }
+        .ghost-btn:active { transform: scale(0.98); }
 
-        .club-img {
-          transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
-        }
-        .club-card:hover .club-img {
-          transform: scale(1.08);
+        .club-img-wrap { overflow: hidden; }
+        .club-img-wrap img { transition: transform 0.7s cubic-bezier(0.4,0,0.2,1), filter 0.7s ease; }
+        .club-card-root:hover .club-img-wrap img {
+          transform: scale(1.07);
+          filter: brightness(0.6) saturate(0.7) !important;
         }
 
         @media(max-width:900px) {
@@ -215,309 +215,152 @@ export default function HomePage() {
           .shop-g   { grid-template-columns: repeat(2,1fr) !important; }
         }
         @media(max-width:480px) {
-          .clubs-g  { grid-template-columns: 1fr !important; }
-          .shop-g   { grid-template-columns: 1fr !important; }
+          .clubs-g { grid-template-columns: 1fr !important; }
+          .shop-g  { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
       {/* ==================== CINEMATIC HERO ==================== */}
-      <div style={{ position: 'relative', height: '100vh', minHeight: '700px', overflow: 'hidden', background: '#020806' }}>
+      <div style={{ position: 'relative', height: '100vh', minHeight: '700px', overflow: 'hidden', background: '#010604' }}>
 
-        {/* ── Background image slides ── */}
         {heroSlides.map((s, i) => (
           <div key={i} style={{
             position: 'absolute', inset: 0,
             opacity: i === heroSlide ? 1 : 0,
-            transition: 'opacity 2.5s cubic-bezier(0.4,0,0.2,1)',
-            transform: `scale(${heroScale})`,
-            willChange: 'transform',
-            zIndex: 0,
+            transition: 'opacity 2.8s cubic-bezier(0.4,0,0.2,1)',
+            transform: `scale(${heroScale})`, willChange: 'transform', zIndex: 0,
           }}>
-            <img src={s.img} alt="" style={{
-              width: '100%', height: '100%', objectFit: 'cover',
-              filter: 'brightness(0.18) saturate(0.5) contrast(1.1)',
-            }} />
+            <img src={s.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.16) saturate(0.45) contrast(1.15)' }} />
           </div>
         ))}
 
-        {/* ── Video layer ── */}
         <video ref={videoRef} autoPlay muted loop playsInline preload="metadata" style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', opacity: 0.06,
-          transform: `scale(${heroScale})`, zIndex: 1,
+          objectFit: 'cover', opacity: 0.05, transform: `scale(${heroScale})`, zIndex: 1,
         }}>
           <source src="/hero.mp4" type="video/mp4" />
         </video>
 
-        {/* ── Cinematic vignette ── */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
-          background: `
-            linear-gradient(to bottom,
-              rgba(2,8,6,0.75) 0%,
-              rgba(2,8,6,0.1) 25%,
-              rgba(2,8,6,0.1) 60%,
-              rgba(2,8,6,0.95) 100%
-            ),
-            linear-gradient(to right,
-              rgba(2,8,6,0.0) 40%,
-              rgba(2,8,6,0.7) 100%
-            )
-          `,
-        }} />
+        {/* Cinematic overlays */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', background: 'linear-gradient(to bottom, rgba(1,6,4,0.7) 0%, rgba(1,6,4,0.05) 25%, rgba(1,6,4,0.05) 55%, rgba(1,6,4,0.92) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', background: 'linear-gradient(to left, rgba(1,6,4,0.65) 0%, transparent 55%)' }} />
 
-        {/* ── Neon accent ambient ── */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none',
-          background: `radial-gradient(ellipse 60% 60% at 28% 65%, ${currentSlide.accent}0e 0%, transparent 100%)`,
-          transition: 'background 2.5s ease',
-        }} />
+        {/* Neon ambient */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none', background: `radial-gradient(ellipse 55% 55% at 25% 65%, ${currentSlide.accent}10 0%, transparent 100%)`, transition: 'background 2.8s ease' }} />
 
-        {/* ── Floating ambient orb top-left ── */}
-        <div style={{
-          position: 'absolute', top: '-5%', left: '-5%',
-          width: '55vw', height: '55vw', maxWidth: '700px', maxHeight: '700px',
-          borderRadius: '50%', zIndex: 3, pointerEvents: 'none',
-          background: `radial-gradient(ellipse, ${currentSlide.accent}07 0%, transparent 65%)`,
-          animation: 'ambientFloat 14s ease-in-out infinite',
-          transition: 'background 2.5s ease',
-        }} />
+        {/* Ambient orb */}
+        <div style={{ position: 'absolute', top: '-10%', left: '-8%', width: '60vw', height: '60vw', maxWidth: '750px', maxHeight: '750px', borderRadius: '50%', zIndex: 3, pointerEvents: 'none', background: `radial-gradient(ellipse, ${currentSlide.accent}06 0%, transparent 65%)`, animation: 'ambientFloat 16s ease-in-out infinite', transition: 'background 2.8s ease', filter: 'blur(40px)' }} />
 
-        {/* ── Right-side vertical neon rule ── */}
-        <div style={{
-          position: 'absolute', right: '52px', top: '30%', bottom: '30%',
-          width: '1px', zIndex: 5, pointerEvents: 'none',
-          background: `linear-gradient(to bottom, transparent, ${currentSlide.accent}55, transparent)`,
-          boxShadow: `0 0 16px ${currentSlide.accent}40`,
-          transition: 'all 2.5s ease',
-        }} />
+        {/* Vertical neon line */}
+        <div style={{ position: 'absolute', right: '56px', top: '28%', bottom: '28%', width: '1px', zIndex: 5, pointerEvents: 'none', background: `linear-gradient(to bottom, transparent, ${currentSlide.accent}50, transparent)`, boxShadow: `0 0 18px ${currentSlide.accent}35`, transition: 'all 2.8s ease', animation: 'borderGlow 4s ease-in-out infinite' }} />
 
-        {/* ── Bottom neon rule ── */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: '8%', right: '8%', height: '1px',
-          zIndex: 5, pointerEvents: 'none',
-          background: `linear-gradient(to right, transparent, ${currentSlide.accent}25, transparent)`,
-        }} />
+        {/* Bottom line */}
+        <div style={{ position: 'absolute', bottom: 0, left: '7%', right: '7%', height: '1px', zIndex: 5, pointerEvents: 'none', background: `linear-gradient(to right, transparent, ${currentSlide.accent}20, transparent)` }} />
 
-        {/* ── HERO CONTENT ── */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 10,
-          display: 'flex', alignItems: 'center',
-          padding: '0 7% 0 7%',
-          transform: `translateY(${contentTranslateY}px)`,
-          opacity: heroOpacity,
-        }}>
-          <div style={{ maxWidth: '560px', textAlign: 'right' }}>
+        {/* Hero content */}
+        <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', padding: '0 7%', transform: `translateY(${contentTranslateY}px)`, opacity: heroOpacity }}>
+          <div style={{ maxWidth: '580px', textAlign: 'right' }}>
 
-            {/* eyebrow badge */}
-            <div className="hb" style={{
-              display: 'inline-flex', alignItems: 'center', gap: '10px',
-              background: `rgba(255,255,255,0.04)`,
-              border: `1px solid ${currentSlide.accent}30`,
-              borderRadius: '100px', padding: '8px 22px', marginBottom: '28px',
-              backdropFilter: 'blur(24px)',
-              boxShadow: `0 0 24px ${currentSlide.accent}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
-              transition: 'all 2.5s ease',
-            }}>
-              <span style={{
-                width: '5px', height: '5px', borderRadius: '50%',
-                background: currentSlide.accent,
-                boxShadow: `0 0 10px ${currentSlide.accent}, 0 0 20px ${currentSlide.accent}80`,
-                animation: 'neonPulse 3s infinite',
-                display: 'inline-block', flexShrink: 0,
-              }} />
-              <span style={{ color: currentSlide.accent, fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em' }}>
-                BILLIARD PLUS
-              </span>
+            {/* Tag */}
+            <div className="hb" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.035)', border: `1px solid ${currentSlide.accent}28`, borderRadius: '100px', padding: '8px 22px', marginBottom: '30px', backdropFilter: 'blur(24px)', boxShadow: `0 0 28px ${currentSlide.accent}12, inset 0 1px 0 rgba(255,255,255,0.04)`, transition: 'all 2.8s ease' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: currentSlide.accent, boxShadow: `0 0 10px ${currentSlide.accent}, 0 0 20px ${currentSlide.accent}70`, display: 'inline-block', flexShrink: 0, animation: 'neonPulse 3s infinite' }} />
+              <span style={{ color: currentSlide.accent, fontSize: '9px', fontWeight: 700, letterSpacing: '0.22em' }}>{currentSlide.tag}</span>
             </div>
 
-            {/* main title */}
-            <h1 className="ha" style={{
-              fontSize: 'clamp(44px,7.5vw,96px)',
-              fontWeight: 900,
-              color: '#ffffff',
-              lineHeight: 1.0,
-              margin: '0 0 20px',
-              letterSpacing: '-0.04em',
-              textShadow: `0 0 120px ${currentSlide.accent}20, 0 2px 0 rgba(0,0,0,0.5)`,
-            }}>
+            {/* Title */}
+            <h1 className="ha" style={{ fontSize: 'clamp(46px,7.5vw,98px)', fontWeight: 900, color: '#fff', lineHeight: 0.98, margin: '0 0 22px', letterSpacing: '-0.045em', textShadow: `0 0 100px ${currentSlide.accent}18, 0 2px 0 rgba(0,0,0,0.6)` }}>
               {currentSlide.title}
             </h1>
 
-            {/* accent divider */}
-            <div style={{
-              height: '1px',
-              width: '56px',
-              background: `linear-gradient(90deg, ${currentSlide.accent}, transparent)`,
-              boxShadow: `0 0 16px ${currentSlide.accent}90`,
-              marginBottom: '22px',
-              transition: 'background 2.5s, box-shadow 2.5s',
-            }} />
+            {/* Accent line */}
+            <div style={{ height: '1px', width: '54px', background: `linear-gradient(90deg, ${currentSlide.accent}, transparent)`, boxShadow: `0 0 18px ${currentSlide.accent}`, marginBottom: '24px', transition: 'all 2.8s ease' }} />
 
-            {/* subtitle */}
-            <p className="hb" style={{
-              fontSize: 'clamp(15px,1.8vw,19px)',
-              color: 'rgba(255,255,255,0.45)',
-              margin: '0 0 40px',
-              lineHeight: 1.85,
-              fontWeight: 400,
-              maxWidth: '420px',
-            }}>
+            {/* Subtitle */}
+            <p className="hb" style={{ fontSize: 'clamp(15px,1.8vw,19px)', color: 'rgba(255,255,255,0.42)', margin: '0 0 44px', lineHeight: 1.9, fontWeight: 400, maxWidth: '400px' }}>
               {currentSlide.sub}
             </p>
 
-            {/* CTA row */}
-            <div className="hc" style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Link href="/clubs">
-                <button className="neon-btn">یافتن باشگاه</button>
-              </Link>
-              <Link href="/register">
-                <button className="ghost-btn">ثبت‌نام رایگان</button>
-              </Link>
+            {/* CTAs */}
+            <div className="hc" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <Link href="/clubs"><button className="neon-btn">یافتن باشگاه</button></Link>
+              <Link href="/register"><button className="ghost-btn">ثبت‌نام رایگان</button></Link>
             </div>
 
-            {/* stats row */}
-            <div className="hd" style={{
-              display: 'flex', gap: '0', marginTop: '52px',
-              borderTop: '1px solid rgba(255,255,255,0.06)',
-              paddingTop: '28px',
-            }}>
-              {[
-                { v: '۵۰۰+', l: 'باشگاه فعال' },
-                { v: '۱۰K+', l: 'بازیکن' },
-                { v: '۲۰۰+', l: 'مسابقه' },
-              ].map((s, i) => (
-                <div key={i} style={{
-                  flex: 1,
-                  textAlign: 'center',
-                  borderLeft: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none',
-                  padding: '0 20px',
-                }}>
-                  <div style={{
-                    fontSize: 'clamp(22px,3vw,30px)',
-                    fontWeight: 900, color: '#fff', lineHeight: 1,
-                    letterSpacing: '-0.03em',
-                    textShadow: `0 0 30px ${currentSlide.accent}30`,
-                  }}>{s.v}</div>
-                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', marginTop: '6px', letterSpacing: '0.08em' }}>{s.l}</div>
+            {/* Stats */}
+            <div className="hd" style={{ display: 'flex', marginTop: '56px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '30px' }}>
+              {[{ v: '۵۰۰+', l: 'باشگاه فعال' }, { v: '۱۰K+', l: 'بازیکن' }, { v: '۲۰۰+', l: 'مسابقه' }].map((s, i) => (
+                <div key={i} style={{ flex: 1, textAlign: 'center', borderLeft: i < 2 ? '1px solid rgba(255,255,255,0.05)' : 'none', padding: '0 18px' }}>
+                  <div style={{ fontSize: 'clamp(20px,3vw,28px)', fontWeight: 900, color: '#fff', lineHeight: 1, letterSpacing: '-0.03em', textShadow: `0 0 28px ${currentSlide.accent}28` }}>{s.v}</div>
+                  <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.22)', marginTop: '7px', letterSpacing: '0.1em' }}>{s.l}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* ── Slide indicators ── */}
-        <div style={{
-          position: 'absolute', bottom: '36px', left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 10, display: 'flex', gap: '10px',
-          opacity: heroOpacity,
-        }}>
+        {/* Indicators */}
+        <div style={{ position: 'absolute', bottom: '38px', left: '50%', transform: 'translateX(-50%)', zIndex: 10, display: 'flex', gap: '10px', opacity: heroOpacity }}>
           {heroSlides.map((s, i) => (
-            <button key={i} onClick={() => setHeroSlide(i)} style={{
-              height: '2px',
-              width: i === heroSlide ? '36px' : '10px',
-              borderRadius: '1px', border: 'none', cursor: 'pointer', padding: 0,
-              background: i === heroSlide ? s.accent : 'rgba(255,255,255,0.18)',
-              transition: 'all 0.5s ease',
-              boxShadow: i === heroSlide ? `0 0 14px ${s.accent}` : 'none',
-            }} />
+            <button key={i} onClick={() => setHeroSlide(i)} style={{ height: '2px', width: i === heroSlide ? '36px' : '10px', borderRadius: '1px', border: 'none', cursor: 'pointer', padding: 0, background: i === heroSlide ? s.accent : 'rgba(255,255,255,0.15)', transition: 'all 0.6s ease', boxShadow: i === heroSlide ? `0 0 14px ${s.accent}` : 'none' }} />
           ))}
         </div>
 
-        {/* ── Video play/pause ── */}
-        <button onClick={() => {
-          if (videoRef.current) {
-            if (videoPlaying) { videoRef.current.pause(); setVideoPlaying(false); }
-            else { videoRef.current.play(); setVideoPlaying(true); }
-          }
-        }} style={{
-          position: 'absolute', bottom: '36px', right: '52px', zIndex: 10,
-          width: '34px', height: '34px', borderRadius: '50%',
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          cursor: 'pointer', color: 'rgba(255,255,255,0.4)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          backdropFilter: 'blur(16px)',
-          opacity: heroOpacity, transition: 'all 0.3s',
-        }}>
+        {/* Video control */}
+        <button onClick={() => { if (videoRef.current) { if (videoPlaying) { videoRef.current.pause(); setVideoPlaying(false); } else { videoRef.current.play(); setVideoPlaying(true); } } }} style={{ position: 'absolute', bottom: '38px', right: '56px', zIndex: 10, width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(16px)', opacity: heroOpacity, transition: 'all 0.3s' }}>
           {videoPlaying ? <Pause size={12} /> : <Play size={12} />}
         </button>
 
-        {/* ── Scroll hint ── */}
-        <div style={{
-          position: 'absolute', bottom: '32px', left: '52px', zIndex: 10,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px',
-          opacity: Math.max(0, heroOpacity - 0.15),
-        }}>
-          <span style={{ fontSize: '8px', color: 'rgba(255,255,255,0.2)', letterSpacing: '0.22em', writingMode: 'vertical-rl' }}>SCROLL</span>
-          <div style={{
-            width: '1px', height: '40px',
-            background: `linear-gradient(to bottom, ${currentSlide.accent}50, transparent)`,
-            animation: 'scrollHint 2.5s ease infinite',
-          }} />
+        {/* Scroll hint */}
+        <div style={{ position: 'absolute', bottom: '34px', left: '56px', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', opacity: Math.max(0, heroOpacity - 0.2) }}>
+          <span style={{ fontSize: '8px', color: 'rgba(255,255,255,0.18)', letterSpacing: '0.24em', writingMode: 'vertical-rl' }}>SCROLL</span>
+          <div style={{ width: '1px', height: '40px', background: `linear-gradient(to bottom, ${currentSlide.accent}45, transparent)`, animation: 'scrollHint 2.5s ease infinite' }} />
         </div>
       </div>
 
       {/* ==================== DARK CONTENT ==================== */}
-      <div style={{ background: 'linear-gradient(180deg, #060d0a 0%, #080f0b 40%, #0a1210 70%, #060d0a 100%)', position: 'relative' }}>
+      <div style={{ background: 'linear-gradient(180deg, #050c08 0%, #070e0a 50%, #050c08 100%)', position: 'relative' }}>
 
-        {/* Ambient background glows */}
-        <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse at 20% 30%, rgba(16,185,129,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(6,182,212,0.03) 0%, transparent 50%)' }} />
+        <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse at 18% 28%, rgba(16,185,129,0.035) 0%, transparent 50%), radial-gradient(ellipse at 82% 72%, rgba(6,182,212,0.025) 0%, transparent 50%)' }} />
 
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '80px 32px 80px', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '90px 32px 90px', position: 'relative', zIndex: 1 }}>
 
           {/* ===== CLUBS ===== */}
-          <ScrollReveal>
-            <section style={{ marginBottom: '100px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
-                <div>
-                  <div className="section-label" style={{ color: '#10b981' }}>PREMIUM VENUES</div>
-                  <h2 className="section-title">باشگاه‌های برتر</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #10b981, transparent)', boxShadow: '0 0 12px rgba(16,185,129,0.4)' }} />
-                </div>
-                <Link href="/clubs" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', opacity: 0.7, transition: 'opacity 0.2s' }}>
-                  مشاهده همه <ArrowLeft size={14} />
-                </Link>
-              </div>
-
+          <ScrollReveal delay={0}>
+            <section style={{ marginBottom: '110px' }}>
+              <SectionHeader label="PREMIUM VENUES" title="باشگاه‌های برتر" labelColor="#10b981" lineColor="#10b981" href="/clubs" />
               <div className="clubs-g" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
                 {featuredClubs.map((club, idx) => (
                   <Link key={club.id} href={`/clubs/${club.id}`} style={{ textDecoration: 'none' }}>
                     <DarkCard hoverGlow="#10b981">
-                      <div className="club-card" style={{ height: '100%' }}>
-                        {/* Image */}
-                        <div style={{ height: '180px', position: 'relative', overflow: 'hidden' }}>
-                          <img className="club-img" src={club.img} alt={club.name}
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.5) saturate(0.8)' }}
-                            onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(6,13,10,0.8) 100%)' }} />
+                      <div className="club-card-root" style={{ height: '100%' }}>
+                        <div className="club-img-wrap" style={{ height: '190px', position: 'relative' }}>
+                          <img src={club.img} alt={club.name} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.48) saturate(0.75)' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 35%, rgba(5,12,8,0.85) 100%)' }} />
 
-                          {/* Type badge */}
-                          <div style={{ position: 'absolute', bottom: '12px', right: '12px', background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', fontSize: '10px', fontWeight: 700, padding: '4px 12px', borderRadius: '20px', backdropFilter: 'blur(10px)', letterSpacing: '0.05em' }}>
-                            {club.type}
+                          {/* Rank */}
+                          <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.35)', fontSize: '10px', fontWeight: 700, padding: '3px 11px', borderRadius: '20px', backdropFilter: 'blur(12px)', letterSpacing: '0.04em' }}>
+                            #{(idx + 1).toLocaleString('fa-IR')}
                           </div>
 
-                          {/* Rank badge */}
-                          <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)', fontSize: '10px', fontWeight: 600, padding: '3px 10px', borderRadius: '20px', backdropFilter: 'blur(10px)' }}>
-                            #{(idx + 1).toLocaleString('fa-IR')}
+                          {/* Type */}
+                          <div style={{ position: 'absolute', bottom: '14px', right: '14px', background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.28)', color: '#10b981', fontSize: '10px', fontWeight: 700, padding: '4px 13px', borderRadius: '20px', backdropFilter: 'blur(12px)', letterSpacing: '0.06em' }}>
+                            {club.type}
                           </div>
                         </div>
 
-                        {/* Content */}
-                        <div style={{ padding: '18px' }}>
-                          <h3 style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px', fontSize: '15px', letterSpacing: '-0.01em' }}>{club.name}</h3>
-                          <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '14px' }}>
-                            <span>{club.city}</span>
-                            <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
+                        <div style={{ padding: '20px' }}>
+                          <h3 style={{ fontWeight: 800, color: '#f0faf5', marginBottom: '8px', fontSize: '15px', letterSpacing: '-0.015em', lineHeight: 1.2 }}>{club.name}</h3>
+                          <div style={{ display: 'flex', gap: '10px', fontSize: '12px', color: 'rgba(240,250,245,0.4)', marginBottom: '16px', alignItems: 'center' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><MapPin size={10} style={{ color: '#10b981', opacity: 0.6 }} />{club.city}</span>
+                            <span style={{ color: 'rgba(255,255,255,0.1)' }}>·</span>
                             <span>{club.tables.toLocaleString('fa-IR')} میز</span>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ display: 'flex', gap: '3px' }}>
-                              {[1, 2, 3, 4, 5].map(s => <Star key={s} size={12} style={{ color: s <= Math.floor(club.rating) ? '#f59e0b' : 'rgba(255,255,255,0.1)', fill: s <= Math.floor(club.rating) ? '#f59e0b' : 'transparent' }} />)}
-                              <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', marginRight: '4px' }}>{club.rating}</span>
+                            <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
+                              {[1,2,3,4,5].map(s => <Star key={s} size={11} style={{ color: s <= Math.floor(club.rating) ? '#f59e0b' : 'rgba(255,255,255,0.08)', fill: s <= Math.floor(club.rating) ? '#f59e0b' : 'transparent' }} />)}
+                              <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginRight: '5px' }}>{club.rating}</span>
                             </div>
-                            <span style={{ fontSize: '11px', color: '#10b981', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', padding: '4px 12px', borderRadius: '20px', fontWeight: 600 }}>رزرو آنلاین</span>
+                            <span style={{ fontSize: '10px', color: '#10b981', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', padding: '4px 12px', borderRadius: '20px', fontWeight: 700, letterSpacing: '0.03em' }}>رزرو آنلاین</span>
                           </div>
                         </div>
                       </div>
@@ -528,33 +371,30 @@ export default function HomePage() {
             </section>
           </ScrollReveal>
 
-          {/* ===== AD BANNER ===== */}
-          <ScrollReveal>
-            <section style={{ marginBottom: '100px' }}>
-              <div style={{ position: 'relative', borderRadius: '28px', overflow: 'hidden', minHeight: '180px' }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #031a0f 0%, #052e1a 50%, #064e3b 100%)' }} />
-                <img src="/images/billiadr-club-2.jpg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.08 }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+          {/* ===== AD ===== */}
+          <ScrollReveal delay={0}>
+            <section style={{ marginBottom: '110px' }}>
+              <div style={{ position: 'relative', borderRadius: '28px', overflow: 'hidden', minHeight: '190px' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #020f07 0%, #041a0e 50%, #053d22 100%)' }} />
+                <img src={img1} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.06 }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                <div style={{ position: 'absolute', inset: 0, border: '1px solid rgba(16,185,129,0.18)', borderRadius: '28px', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', top: '-100px', right: '-100px', width: '350px', height: '350px', borderRadius: '50%', background: 'radial-gradient(rgba(16,185,129,0.12), transparent 70%)', pointerEvents: 'none', filter: 'blur(40px)' }} />
+                <div style={{ position: 'absolute', top: '-1px', left: '50%', transform: 'translateX(-50%)', width: '180px', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.5), transparent)' }} />
 
-                {/* Neon border */}
-                <div style={{ position: 'absolute', inset: 0, borderRadius: '28px', border: '1px solid rgba(16,185,129,0.2)', pointerEvents: 'none' }} />
-
-                {/* Ambient glow */}
-                <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(rgba(16,185,129,0.15), transparent 70%)', pointerEvents: 'none' }} />
-
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '36px 48px', flexWrap: 'wrap', gap: '24px' }}>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '40px 52px', flexWrap: 'wrap', gap: '24px' }}>
                   <div>
-                    <div style={{ fontSize: '9px', color: 'rgba(16,185,129,0.5)', letterSpacing: '0.25em', marginBottom: '10px', fontWeight: 700 }}>ADVERTISEMENT</div>
-                    <h3 style={{ fontSize: 'clamp(20px,3vw,32px)', fontWeight: 900, color: '#fff', margin: '0 0 8px', letterSpacing: '-0.02em' }}>باشگاه خود را معرفی کنید</h3>
-                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px', margin: 0 }}>به هزاران بازیکن و علاقه‌مند دسترسی پیدا کنید</p>
+                    <div style={{ fontSize: '8px', color: 'rgba(16,185,129,0.45)', letterSpacing: '0.3em', marginBottom: '12px', fontWeight: 700 }}>SPONSORED · تبلیغ</div>
+                    <h3 style={{ fontSize: 'clamp(20px,3vw,30px)', fontWeight: 900, color: '#fff', margin: '0 0 10px', letterSpacing: '-0.025em', lineHeight: 1.1 }}>باشگاه خود را به ایران معرفی کنید</h3>
+                    <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '14px', margin: 0, lineHeight: 1.6 }}>به شبکه‌ای از هزاران بازیکن حرفه‌ای دسترسی داشته باشید</p>
                   </div>
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
                     {[{ v: '۵۰K+', l: 'بازدید ماهانه' }, { v: '۱۰K+', l: 'کاربر فعال' }].map((s, i) => (
-                      <div key={i} style={{ textAlign: 'center', padding: '12px 20px', background: 'rgba(16,185,129,0.06)', borderRadius: '14px', border: '1px solid rgba(16,185,129,0.15)' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 900, color: '#10b981', textShadow: '0 0 20px rgba(16,185,129,0.5)' }}>{s.v}</div>
-                        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.3)', marginTop: '3px' }}>{s.l}</div>
+                      <div key={i} style={{ textAlign: 'center', padding: '14px 22px', background: 'rgba(16,185,129,0.05)', borderRadius: '14px', border: '1px solid rgba(16,185,129,0.12)' }}>
+                        <div style={{ fontSize: '22px', fontWeight: 900, color: '#10b981', textShadow: '0 0 24px rgba(16,185,129,0.45)', letterSpacing: '-0.02em' }}>{s.v}</div>
+                        <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', marginTop: '4px', letterSpacing: '0.06em' }}>{s.l}</div>
                       </div>
                     ))}
-                    <button className="neon-btn" style={{ padding: '12px 24px', fontSize: '13px' }}>درخواست تبلیغ</button>
+                    <button className="neon-btn" style={{ padding: '13px 26px', fontSize: '13px' }}>درخواست تبلیغ</button>
                   </div>
                 </div>
               </div>
@@ -562,40 +402,36 @@ export default function HomePage() {
           </ScrollReveal>
 
           {/* ===== EVENTS ===== */}
-          <ScrollReveal>
-            <section style={{ marginBottom: '100px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
-                <div>
-                  <div className="section-label" style={{ color: '#f59e0b' }}>UPCOMING EVENTS</div>
-                  <h2 className="section-title">مسابقات پیش رو</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #f59e0b, transparent)', boxShadow: '0 0 12px rgba(245,158,11,0.4)' }} />
-                </div>
-                <Link href="/events" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', opacity: 0.7 }}>
-                  مشاهده همه <ArrowLeft size={14} />
-                </Link>
-              </div>
-
+          <ScrollReveal delay={0}>
+            <section style={{ marginBottom: '110px' }}>
+              <SectionHeader label="UPCOMING EVENTS" title="مسابقات پیش رو" labelColor="#f59e0b" lineColor="#f59e0b" href="/events" />
               <div className="events-g" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
                 {upcomingEvents.map(event => (
                   <Link key={event.id} href={`/events/${event.id}`} style={{ textDecoration: 'none' }}>
-                    <DarkCard hoverGlow={event.color} style={{ padding: '24px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: event.color, boxShadow: `0 0 12px ${event.color}, 0 0 24px ${event.color}60`, flexShrink: 0 }} />
-                        <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{event.date}</span>
+                    <DarkCard hoverGlow={event.color} style={{ padding: '26px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: event.color, boxShadow: `0 0 12px ${event.color}, 0 0 24px ${event.color}50`, flexShrink: 0 }} />
+                          <span style={{ fontSize: '11px', color: 'rgba(240,250,245,0.4)' }}>{event.date}</span>
+                        </div>
+                        <div style={{ fontSize: '9px', color: event.color, background: `${event.color}12`, border: `1px solid ${event.color}25`, borderRadius: '20px', padding: '3px 10px', fontWeight: 700, letterSpacing: '0.08em' }}>{event.tag}</div>
                       </div>
-                      <h3 style={{ fontWeight: 800, color: 'var(--text-primary)', marginBottom: '18px', fontSize: '14px', lineHeight: 1.65, letterSpacing: '-0.01em' }}>{event.title}</h3>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '14px' }}>
+
+                      <h3 style={{ fontWeight: 800, color: '#f0faf5', marginBottom: '20px', fontSize: '14px', lineHeight: 1.65, letterSpacing: '-0.01em' }}>{event.title}</h3>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                         <div>
-                          <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '4px', letterSpacing: '0.05em' }}>جایزه</div>
-                          <div style={{ fontSize: '14px', fontWeight: 800, color: '#f59e0b', textShadow: '0 0 20px rgba(245,158,11,0.4)' }}>{event.prize}</div>
+                          <div style={{ fontSize: '9px', color: 'rgba(240,250,245,0.25)', marginBottom: '5px', letterSpacing: '0.1em', textTransform: 'uppercase' }}>جایزه</div>
+                          <div style={{ fontSize: '15px', fontWeight: 900, color: '#f59e0b', textShadow: '0 0 20px rgba(245,158,11,0.35)', letterSpacing: '-0.01em' }}>{event.prize}</div>
                         </div>
                         <div style={{ textAlign: 'left' }}>
-                          <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '4px', letterSpacing: '0.05em' }}>ثبت‌نام</div>
-                          <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-secondary)' }}>{event.participants.toLocaleString('fa-IR')}/{event.maxParticipants.toLocaleString('fa-IR')}</div>
+                          <div style={{ fontSize: '9px', color: 'rgba(240,250,245,0.25)', marginBottom: '5px', letterSpacing: '0.1em', textTransform: 'uppercase' }}>ثبت‌نام</div>
+                          <div style={{ fontSize: '15px', fontWeight: 700, color: 'rgba(240,250,245,0.5)' }}>{event.participants.toLocaleString('fa-IR')}<span style={{ fontSize: '12px', opacity: 0.5 }}>/{event.maxParticipants.toLocaleString('fa-IR')}</span></div>
                         </div>
                       </div>
-                      <div style={{ height: '3px', background: 'rgba(255,255,255,0.06)', borderRadius: '2px', overflow: 'hidden' }}>
-                        <div style={{ height: '100%', background: event.color, borderRadius: '2px', width: `${(event.participants / event.maxParticipants) * 100}%`, boxShadow: `0 0 8px ${event.color}` }} />
+
+                      <div style={{ height: '2px', background: 'rgba(255,255,255,0.05)', borderRadius: '1px', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', background: `linear-gradient(90deg, ${event.color}, ${event.color}80)`, borderRadius: '1px', width: `${(event.participants / event.maxParticipants) * 100}%`, boxShadow: `0 0 10px ${event.color}` }} />
                       </div>
                     </DarkCard>
                   </Link>
@@ -605,36 +441,25 @@ export default function HomePage() {
           </ScrollReveal>
 
           {/* ===== NEWS ===== */}
-          <ScrollReveal>
-            <section style={{ marginBottom: '100px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
-                <div>
-                  <div className="section-label" style={{ color: '#06b6d4' }}>LATEST NEWS</div>
-                  <h2 className="section-title">آخرین اخبار</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #06b6d4, transparent)', boxShadow: '0 0 12px rgba(6,182,212,0.4)' }} />
-                </div>
-                <Link href="/news" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', opacity: 0.7 }}>
-                  مشاهده همه <ArrowLeft size={14} />
-                </Link>
-              </div>
-
+          <ScrollReveal delay={0}>
+            <section style={{ marginBottom: '110px' }}>
+              <SectionHeader label="LATEST NEWS" title="آخرین اخبار" labelColor="#06b6d4" lineColor="#06b6d4" href="/news" />
               <div className="news-g" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '20px' }}>
                 {latestNews.map(news => (
                   <Link key={news.id} href={`/news/${news.id}`} style={{ textDecoration: 'none' }}>
                     <DarkCard hoverGlow={news.categoryColor}>
-                      <div style={{ height: '150px', position: 'relative', overflow: 'hidden' }}>
-                        <img src={news.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.4) saturate(0.7)', transition: 'transform 0.5s ease' }}
-                          onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(6,13,10,0.9) 100%)' }} />
-                        <div style={{ position: 'absolute', top: '12px', right: '12px', fontSize: '10px', fontWeight: 700, padding: '4px 12px', borderRadius: '20px', color: news.categoryColor, background: `${news.categoryColor}15`, border: `1px solid ${news.categoryColor}30`, backdropFilter: 'blur(10px)' }}>
+                      <div className="club-img-wrap" style={{ height: '160px', position: 'relative' }}>
+                        <img src={news.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.38) saturate(0.65)' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 35%, rgba(5,12,8,0.92) 100%)' }} />
+                        <div style={{ position: 'absolute', top: '12px', right: '12px', fontSize: '9px', fontWeight: 700, padding: '4px 12px', borderRadius: '20px', color: news.categoryColor, background: `${news.categoryColor}12`, border: `1px solid ${news.categoryColor}28`, backdropFilter: 'blur(12px)', letterSpacing: '0.06em' }}>
                           {news.category}
                         </div>
                       </div>
-                      <div style={{ padding: '16px' }}>
-                        <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '13px', lineHeight: 1.75, marginBottom: '12px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{news.title}</h3>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Clock size={10} />{news.date}</span>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Eye size={10} />{news.views.toLocaleString('fa-IR')}</span>
+                      <div style={{ padding: '18px' }}>
+                        <h3 style={{ fontWeight: 700, color: '#f0faf5', fontSize: '13px', lineHeight: 1.8, marginBottom: '14px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', letterSpacing: '-0.005em' }}>{news.title}</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'rgba(240,250,245,0.22)' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Clock size={10} />{news.date}</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Eye size={10} />{news.views.toLocaleString('fa-IR')}</span>
                         </div>
                       </div>
                     </DarkCard>
@@ -645,38 +470,34 @@ export default function HomePage() {
           </ScrollReveal>
 
           {/* ===== SHOP ===== */}
-          <ScrollReveal>
-            <section style={{ marginBottom: '100px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
-                <div>
-                  <div className="section-label" style={{ color: '#a78bfa' }}>PREMIUM EQUIPMENT</div>
-                  <h2 className="section-title">فروشگاه تجهیزات</h2>
-                  <div className="section-line" style={{ background: 'linear-gradient(90deg, #a78bfa, transparent)', boxShadow: '0 0 12px rgba(167,139,250,0.4)' }} />
-                </div>
-                <Link href="/shop" style={{ fontSize: '13px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', opacity: 0.7 }}>
-                  مشاهده همه <ArrowLeft size={14} />
-                </Link>
-              </div>
-
+          <ScrollReveal delay={0}>
+            <section style={{ marginBottom: '110px' }}>
+              <SectionHeader label="PREMIUM EQUIPMENT" title="فروشگاه تجهیزات" labelColor="#a78bfa" lineColor="#a78bfa" href="/shop" />
               <div className="shop-g" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px' }}>
                 {featuredProducts.map(product => (
                   <Link key={product.id} href={`/shop/${product.id}`} style={{ textDecoration: 'none' }}>
                     <DarkCard hoverGlow="#a78bfa">
-                      <div style={{ height: '130px', position: 'relative', overflow: 'hidden' }}>
-                        <img src={product.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.35) saturate(0.6)', transition: 'transform 0.5s ease' }}
-                          onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 30%, rgba(6,13,10,0.9) 100%)' }} />
-                        <ShoppingBag size={20} style={{ position: 'absolute', bottom: '10px', left: '10px', color: 'rgba(167,139,250,0.3)' }} />
+                      <div className="club-img-wrap" style={{ height: '140px', position: 'relative' }}>
+                        <img src={product.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.3) saturate(0.5)' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 25%, rgba(5,12,8,0.92) 100%)' }} />
+
+                        {/* Brand */}
+                        <div style={{ position: 'absolute', top: '10px', left: '10px', fontSize: '8px', fontWeight: 700, color: 'rgba(167,139,250,0.6)', letterSpacing: '0.15em' }}>
+                          {product.brand}
+                        </div>
+
+                        <ShoppingBag size={18} style={{ position: 'absolute', bottom: '10px', left: '10px', color: 'rgba(167,139,250,0.25)' }} />
+
                         {product.discountPercent > 0 && (
-                          <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(239,68,68,0.9)', color: '#fff', fontSize: '10px', fontWeight: 700, padding: '3px 9px', borderRadius: '20px' }}>
+                          <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(239,68,68,0.85)', color: '#fff', fontSize: '9px', fontWeight: 700, padding: '3px 9px', borderRadius: '20px', backdropFilter: 'blur(8px)' }}>
                             {product.discountPercent.toLocaleString('fa-IR')}٪
                           </div>
                         )}
                       </div>
-                      <div style={{ padding: '14px' }}>
-                        <h3 style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '12px', lineHeight: 1.6, marginBottom: '8px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{product.title}</h3>
-                        <div style={{ fontSize: '10px', color: 'var(--text-muted)', textDecoration: 'line-through', marginBottom: '2px' }}>{product.price.toLocaleString('fa-IR')}</div>
-                        <div style={{ fontSize: '14px', fontWeight: 800, color: '#10b981', textShadow: '0 0 16px rgba(16,185,129,0.4)' }}>{(product.discountPrice || product.price).toLocaleString('fa-IR')} ت</div>
+                      <div style={{ padding: '14px 16px' }}>
+                        <h3 style={{ fontWeight: 700, color: '#f0faf5', fontSize: '12px', lineHeight: 1.65, marginBottom: '10px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', letterSpacing: '-0.005em' }}>{product.title}</h3>
+                        <div style={{ fontSize: '10px', color: 'rgba(240,250,245,0.2)', textDecoration: 'line-through', marginBottom: '3px' }}>{product.price.toLocaleString('fa-IR')}</div>
+                        <div style={{ fontSize: '14px', fontWeight: 900, color: '#10b981', textShadow: '0 0 18px rgba(16,185,129,0.35)', letterSpacing: '-0.01em' }}>{(product.discountPrice || product.price).toLocaleString('fa-IR')} <span style={{ fontSize: '10px', fontWeight: 600, opacity: 0.7 }}>ت</span></div>
                       </div>
                     </DarkCard>
                   </Link>
@@ -686,35 +507,22 @@ export default function HomePage() {
           </ScrollReveal>
 
           {/* ===== CTA ===== */}
-          <ScrollReveal>
+          <ScrollReveal delay={0}>
             <section style={{ marginBottom: '40px' }}>
-              <div style={{
-                position: 'relative', borderRadius: '32px', overflow: 'hidden',
-                padding: '64px 48px', textAlign: 'center',
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(16,185,129,0.15)',
-                backdropFilter: 'blur(24px)',
-              }}>
-                {/* Ambient glow */}
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '600px', height: '400px', background: 'radial-gradient(ellipse, rgba(16,185,129,0.08), transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', top: '-1px', left: '50%', transform: 'translateX(-50%)', width: '200px', height: '1px', background: 'linear-gradient(90deg, transparent, #10b981, transparent)', boxShadow: '0 0 20px rgba(16,185,129,0.5)' }} />
+              <div style={{ position: 'relative', borderRadius: '32px', overflow: 'hidden', padding: '72px 52px', textAlign: 'center', background: 'rgba(255,255,255,0.018)', border: '1px solid rgba(16,185,129,0.12)', backdropFilter: 'blur(24px)' }}>
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '700px', height: '500px', background: 'radial-gradient(ellipse, rgba(16,185,129,0.06), transparent 70%)', pointerEvents: 'none', filter: 'blur(20px)' }} />
+                <div style={{ position: 'absolute', top: '-1px', left: '50%', transform: 'translateX(-50%)', width: '220px', height: '1px', background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.6), transparent)', boxShadow: '0 0 24px rgba(16,185,129,0.4)' }} />
 
                 <div style={{ position: 'relative' }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '100px', padding: '6px 16px', marginBottom: '20px' }}>
-                    <Zap size={12} style={{ color: '#10b981' }} />
-                    <span style={{ fontSize: '10px', color: '#10b981', letterSpacing: '0.15em', fontWeight: 700 }}>JOIN THE ELITE</span>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', borderRadius: '100px', padding: '7px 18px', marginBottom: '22px' }}>
+                    <Trophy size={11} style={{ color: '#10b981' }} />
+                    <span style={{ fontSize: '9px', color: '#10b981', letterSpacing: '0.2em', fontWeight: 700 }}>JOIN THE ELITE</span>
                   </div>
-                  <h2 style={{ fontSize: 'clamp(28px,4vw,44px)', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '12px', letterSpacing: '-0.03em' }}>همین الان شروع کن</h2>
-                  <p style={{ color: 'var(--text-secondary)', marginBottom: '36px', fontSize: '16px', lineHeight: 1.7 }}>رایگان ثبت‌نام کن و به جامعه بیلیارد ایران بپیوند</p>
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                    <Link href="/register">
-                      <button className="neon-btn" style={{ padding: '15px 36px', fontSize: '15px' }}>ثبت‌نام رایگان</button>
-                    </Link>
-                    <Link href="/clubs">
-                      <button className="ghost-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '15px 36px', fontSize: '15px' }}>
-                        <Building2 size={16} /> یافتن باشگاه
-                      </button>
-                    </Link>
+                  <h2 style={{ fontSize: 'clamp(28px,4vw,46px)', fontWeight: 900, color: '#f0faf5', marginBottom: '14px', letterSpacing: '-0.035em', lineHeight: 1.05 }}>همین الان شروع کن</h2>
+                  <p style={{ color: 'rgba(240,250,245,0.38)', marginBottom: '40px', fontSize: '16px', lineHeight: 1.75, maxWidth: '380px', margin: '0 auto 40px' }}>رایگان ثبت‌نام کن و به جامعه بیلیارد ایران بپیوند</p>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
+                    <Link href="/register"><button className="neon-btn" style={{ padding: '15px 36px', fontSize: '15px' }}>ثبت‌نام رایگان</button></Link>
+                    <Link href="/clubs"><button className="ghost-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '15px 36px', fontSize: '15px' }}><Building2 size={16} /> یافتن باشگاه</button></Link>
                   </div>
                 </div>
               </div>
