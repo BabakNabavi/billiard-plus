@@ -791,3 +791,81 @@ main {
     transition-duration: 0.15ms !important;
   }
 }
+/* ============================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================ */
+
+/* GPU compositing — only for animated elements */
+.gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Contain paint for cards */
+.card-contain {
+  contain: layout style paint;
+}
+
+/* Reduce blur cost on mobile */
+@media (max-width: 640px) {
+  .glass-dark,
+  .glass-light {
+    backdrop-filter: blur(12px);
+  }
+
+  /* Disable heavy ambient animations on mobile */
+  .ambient-orb {
+    animation: none !important;
+    opacity: 0.5;
+  }
+}
+
+/* Pause animations when tab not visible */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb,
+  .animate-ambient,
+  .animate-ping,
+  .animate-pulse,
+  .animate-glow {
+    animation: none !important;
+  }
+
+  * {
+    transition-duration: 0.15s !important;
+  }
+}
+
+/* Efficient image rendering */
+img {
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Optimize fixed backgrounds */
+.parallax-bg {
+  will-change: transform;
+}
+
+/* Prevent layout shift */
+.aspect-video { aspect-ratio: 16/9; }
+.aspect-square { aspect-ratio: 1/1; }
+.aspect-card   { aspect-ratio: 4/3; }
+
+/* Optimize scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16,185,129,0.25) transparent;
+}
+
+/* Lazy image placeholder */
+img[loading="lazy"] {
+  background: rgba(255,255,255,0.03);
+}
+
+/* Smooth font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}

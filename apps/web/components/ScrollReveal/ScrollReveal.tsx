@@ -1,32 +1,32 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo } from 'react';
 
-interface ScrollRevealProps {
-  children: React.ReactNode;
-  delay?: number;
+interface Props {
+  children:  React.ReactNode;
+  delay?:    number;
   duration?: number;
   distance?: number;
-  blur?: boolean;
-  scale?: boolean;
-  once?: boolean;
+  blur?:     boolean;
+  once?:     boolean;
 }
 
-export default function ScrollReveal({
-  children,
-  delay = 0,
-  duration = 0.8,
-  distance = 28,
-  blur = true,
-  scale = false,
-  once = true,
-}: ScrollRevealProps) {
+const ScrollReveal = memo(function ScrollReveal({
+  children, delay = 0, duration = 0.75,
+  distance = 24, blur = false, once = true,
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Skip animation if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVisible(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -39,37 +39,27 @@ export default function ScrollReveal({
           setVisible(false);
         }
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.07, rootMargin: '0px 0px -32px 0px' }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
   }, [once]);
 
-  const transform = visible
-    ? 'translateY(0) scale(1)'
-    : `translateY(${distance}px) scale(${scale ? 0.97 : 1})`;
-
-  const filter = blur
-    ? visible ? 'blur(0px)' : 'blur(6px)'
-    : undefined;
-
   return (
     <div
       ref={ref}
       style={{
-        opacity: visible ? 1 : 0,
-        transform,
-        filter,
-        transition: [
-          `opacity ${duration}s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
-          `transform ${duration}s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
-          blur ? `filter ${duration}s cubic-bezier(0.22,1,0.36,1) ${delay}s` : '',
-        ].filter(Boolean).join(', '),
-        willChange: 'opacity, transform',
+        opacity:   visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : `translateY(${distance}px)`,
+        filter:    blur && !visible ? 'blur(4px)' : undefined,
+        transition: `opacity ${duration}s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform ${duration}s cubic-bezier(0.22,1,0.36,1) ${delay}s${blur ? `, filter ${duration}s ease ${delay}s` : ''}`,
+        willChange: visible ? 'auto' : 'opacity, transform',
       }}
     >
       {children}
     </div>
   );
-}
+});
+
+export default ScrollReveal;

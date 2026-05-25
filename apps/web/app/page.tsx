@@ -114,12 +114,19 @@ export default function HomePage() {
   const [heroSlide, setHeroSlide] = useState(0);
   const currentSlide = heroSlides[heroSlide] ?? heroSlides[0]!;
   const [scrollY, setScrollY] = useState(0);
+  const rafRef = useRef<number>(0);
   const [videoPlaying, setVideoPlaying] = useState(true);
 
   useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY);
+    const onScroll = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => setScrollY(window.scrollY));
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -234,7 +241,7 @@ export default function HomePage() {
             transition: 'opacity 2.8s cubic-bezier(0.4,0,0.2,1)',
             transform: `scale(${heroScale})`, willChange: 'transform', zIndex: 0,
           }}>
-            <img src={s.img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.16) saturate(0.45) contrast(1.15)' }} />
+            <img src={s.img} alt="" loading={i === 0 ? 'eager' : 'lazy'} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.16) saturate(0.45) contrast(1.15)' }} />
           </div>
         ))}
 
@@ -361,7 +368,7 @@ export default function HomePage() {
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
-                              {[1,2,3,4,5].map(s => <Star key={s} size={11} style={{ color: s <= Math.floor(club.rating) ? '#f59e0b' : 'rgba(255,255,255,0.08)', fill: s <= Math.floor(club.rating) ? '#f59e0b' : 'transparent' }} />)}
+                              {[1, 2, 3, 4, 5].map(s => <Star key={s} size={11} style={{ color: s <= Math.floor(club.rating) ? '#f59e0b' : 'rgba(255,255,255,0.08)', fill: s <= Math.floor(club.rating) ? '#f59e0b' : 'transparent' }} />)}
                               <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginRight: '5px' }}>{club.rating}</span>
                             </div>
                             <span style={{ fontSize: '10px', color: '#10b981', background: 'rgba(16,185,129,0.07)', border: '1px solid rgba(16,185,129,0.18)', padding: '4px 12px', borderRadius: '20px', fontWeight: 700, letterSpacing: '0.03em' }}>رزرو آنلاین</span>
