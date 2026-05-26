@@ -3,12 +3,10 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { ToastProvider } from '../components/ui/Toast';
-// ...
-<ToastProvider />
 
 export const metadata: Metadata = {
   title: "بیلیارد پلاس",
-  description: "پلتفرم تخصصی بیلیارد ایران",
+  description: "اکوسیستم تخصصی بیلیارد ایران",
 };
 
 export default function RootLayout({
@@ -27,24 +25,20 @@ export default function RootLayout({
             font-style: normal;
             font-display: swap;
           }
-          * { font-family: 'Estedad', 'Vazirmatn', system-ui, sans-serif !important; }
+          * { font-family: 'Estedad', 'Vazirmatn', system-ui, sans-serif !important; box-sizing: border-box; }
           input, select, textarea, button { font-family: 'Estedad', 'Vazirmatn', system-ui, sans-serif !important; }
-          * { box-sizing: border-box; }
           body { margin: 0; padding: 0; }
-          ::-webkit-scrollbar { width: 6px; }
+          ::-webkit-scrollbar { width: 5px; }
           ::-webkit-scrollbar-track { background: #020806; }
-          ::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.3); border-radius: 3px; }
-          ::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.5); }
+          ::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.25); border-radius: 3px; }
+          ::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.45); }
         `}</style>
       </head>
-      
-      <body style={{ backgroundColor: '#030a06', margin: 0, padding: 0 }}>
+      <body style={{ backgroundColor: '#020806', margin: 0, padding: 0 }}>
         <Navbar />
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
         <Footer />
-        
+        <ToastProvider />
       </body>
     </html>
   );

@@ -1,77 +1,271 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '../../lib/api';
 import { useAuthStore } from '../../store/auth.store';
+import { Eye, EyeOff, Phone, Lock, AlertCircle, ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { setAuth } = useAuthStore();
-  const [phone, setPhone] = useState('');
+  const router          = useRouter();
+  const { setAuth, user, _hydrated } = useAuthStore();
+  const [phone, setPhone]       = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [error, setError]       = useState('');
+  const [loading, setLoading]   = useState(false);
+  const [phoneFocus, setPhoneFocus] = useState(false);
+  const [passFocus,  setPassFocus]  = useState(false);
+
+  /* اگه کاربر لاگین هست مستقیم بره dashboard */
+  useEffect(() => {
+    if (_hydrated && user) router.replace('/dashboard');
+  }, [_hydrated, user, router]);
 
   const handleLogin = async () => {
-    setLoading(true);
-    setError('');
+    if (!phone.trim())    { setError('لطفاً شماره موبایل را وارد کنید'); return; }
+    if (!password.trim()) { setError('لطفاً رمز عبور را وارد کنید'); return; }
+
+    setLoading(true); setError('');
     try {
-      const res = await api.post('/auth/login', { phone, password });
+      const res = await api.post('/auth/login', { phone: phone.trim(), password });
       setAuth(res.data.user, res.data.token);
-      router.push('/');
+      router.replace('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'خطا در ورود');
+      setError(err.response?.data?.message || 'شماره یا رمز عبور اشتباه است');
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="max-w-md mx-auto mt-20">
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-        <h1 className="text-2xl font-bold text-center mb-6 text-green-800">
-          ورود به بیلیارد پلاس
-        </h1>
-
-        {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-xl mb-4 text-sm">{error}</div>
-        )}
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">شماره موبایل</label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={e => setPhone(e.target.value)}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="09121234567"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-1">رمز عبور</label>
-          <input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleLogin()}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="رمز عبور"
-          />
-        </div>
-
-        <button onClick={handleLogin} disabled={loading}
-          className="w-full bg-green-700 text-white py-3 rounded-xl hover:bg-green-800 disabled:opacity-50 font-bold">
-          {loading ? 'در حال ورود...' : 'ورود'}
-        </button>
-
-        <p className="text-center mt-4 text-sm text-gray-600">
-          حساب ندارید؟{' '}
-          <Link href="/register" className="text-green-700 font-medium">ثبت‌نام</Link>
-        </p>
-      </div>
+  /* هنوز hydrate نشده */
+  if (!_hydrated) return (
+    <div style={{ minHeight:'100vh', background:'#020806', display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ width:'36px', height:'36px', border:'2px solid rgba(16,185,129,0.1)', borderTop:'2px solid #10b981', borderRadius:'50%', animation:'spin 0.8s linear infinite' }} />
+      <style>{`@keyframes spin{to{transform:rotate(360deg);}}`}</style>
     </div>
+  );
+
+  /* اگه لاگین هست صبر کن redirect بشه */
+  if (user) return null;
+
+  return (
+    <>
+      <style>{`
+        @keyframes spin    { to { transform: rotate(360deg); } }
+        @keyframes fadeUp  { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+        @keyframes ambient { 0%,100%{transform:translate(0,0);}50%{transform:translate(20px,-15px);} }
+
+        .field-wrap {
+          position: relative;
+          display: flex;
+          align-items: center;
+          background: rgba(255,255,255,0.04);
+          border-radius: 14px;
+          transition: all 0.3s;
+        }
+        .field-wrap.focused {
+          background: rgba(255,255,255,0.06);
+          box-shadow: 0 0 0 2px rgba(16,185,129,0.25);
+        }
+        .field-wrap.error-field {
+          box-shadow: 0 0 0 2px rgba(239,68,68,0.25);
+        }
+        .field-input {
+          flex: 1;
+          background: transparent;
+          border: none;
+          outline: none;
+          padding: 15px 16px;
+          font-size: 15px;
+          color: #f0faf5;
+          font-family: inherit;
+          direction: ltr;
+          text-align: right;
+        }
+        .field-input::placeholder { color: rgba(240,250,245,0.22); direction: rtl; }
+        .field-icon {
+          padding: 0 14px 0 0;
+          color: rgba(240,250,245,0.25);
+          display: flex;
+          align-items: center;
+          flex-shrink: 0;
+          transition: color 0.3s;
+        }
+        .field-wrap.focused .field-icon { color: #10b981; }
+
+        .login-btn {
+          width: 100%;
+          padding: 16px;
+          border-radius: 14px;
+          border: none;
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: #fff;
+          font-size: 16px;
+          font-weight: 800;
+          cursor: pointer;
+          font-family: inherit;
+          letter-spacing: 0.02em;
+          transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+          box-shadow: 0 8px 28px rgba(16,185,129,0.3);
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+        .login-btn:not(:disabled):hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 36px rgba(16,185,129,0.45);
+        }
+        .login-btn:not(:disabled):active { transform: scale(0.98); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .login-btn::before {
+          content: '';
+          position: absolute; inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 50%);
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        .login-btn:not(:disabled):hover::before { opacity: 1; }
+      `}</style>
+
+      <div style={{ minHeight:'100vh', background:'linear-gradient(180deg,#020806 0%,#060d0a 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'24px', position:'relative', overflow:'hidden' }}>
+
+        {/* Ambient orbs */}
+        <div style={{ position:'fixed', top:'-10%', left:'-10%', width:'55vw', height:'55vw', maxWidth:'600px', maxHeight:'600px', borderRadius:'50%', background:'radial-gradient(ellipse,rgba(16,185,129,0.07) 0%,transparent 65%)', filter:'blur(40px)', pointerEvents:'none', animation:'ambient 14s ease-in-out infinite' }} />
+        <div style={{ position:'fixed', bottom:'-10%', right:'-10%', width:'45vw', height:'45vw', maxWidth:'500px', maxHeight:'500px', borderRadius:'50%', background:'radial-gradient(ellipse,rgba(6,182,212,0.05) 0%,transparent 65%)', filter:'blur(40px)', pointerEvents:'none', animation:'ambient 18s ease-in-out infinite reverse' }} />
+
+        {/* Card */}
+        <div style={{ width:'100%', maxWidth:'420px', animation:'fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both' }}>
+
+          {/* Logo */}
+          <div style={{ textAlign:'center', marginBottom:'32px' }}>
+            <Link href="/" style={{ display:'inline-flex', alignItems:'center', gap:'10px', textDecoration:'none', marginBottom:'8px' }}>
+              <div style={{ width:'44px', height:'44px', borderRadius:'14px', background:'linear-gradient(135deg,#10b981,#059669)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'20px', fontWeight:900, color:'#fff', boxShadow:'0 8px 24px rgba(16,185,129,0.35)' }}>B</div>
+              <span style={{ fontSize:'22px', fontWeight:900, color:'#f0faf5', letterSpacing:'-0.025em' }}>
+                بیلیارد <span style={{ background:'linear-gradient(135deg,#10b981,#06b6d4)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>پلاس</span>
+              </span>
+            </Link>
+            <div style={{ fontSize:'13px', color:'rgba(240,250,245,0.35)', marginTop:'4px' }}>
+              به پلتفرم تخصصی بیلیارد ایران خوش آمدید
+            </div>
+          </div>
+
+          {/* Form card */}
+          <div style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.08)', borderRadius:'24px', padding:'clamp(24px,5vw,36px)', backdropFilter:'blur(24px)', boxShadow:'0 24px 80px rgba(0,0,0,0.5)', position:'relative', overflow:'hidden' }}>
+
+            {/* Top neon line */}
+            <div style={{ position:'absolute', top:'-1px', left:'50%', transform:'translateX(-50%)', width:'140px', height:'1px', background:'linear-gradient(90deg,transparent,rgba(16,185,129,0.6),transparent)', boxShadow:'0 0 16px rgba(16,185,129,0.4)' }} />
+
+            <h1 style={{ fontSize:'22px', fontWeight:900, color:'#f0faf5', margin:'0 0 6px', letterSpacing:'-0.025em', textAlign:'center' }}>
+              ورود به حساب
+            </h1>
+            <p style={{ fontSize:'13px', color:'rgba(240,250,245,0.35)', textAlign:'center', margin:'0 0 28px' }}>
+              با شماره موبایل خود وارد شوید
+            </p>
+
+            {/* Error */}
+            {error && (
+              <div style={{ display:'flex', alignItems:'center', gap:'10px', padding:'13px 16px', background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.2)', borderRadius:'12px', marginBottom:'20px' }}>
+                <AlertCircle size={15} style={{ color:'#ef4444', flexShrink:0 }} />
+                <span style={{ fontSize:'13px', color:'#fca5a5', flex:1 }}>{error}</span>
+              </div>
+            )}
+
+            {/* Phone */}
+            <div style={{ marginBottom:'14px' }}>
+              <label style={{ display:'block', fontSize:'12px', fontWeight:600, color:'rgba(240,250,245,0.5)', marginBottom:'8px', letterSpacing:'0.03em' }}>
+                شماره موبایل
+              </label>
+              <div className={`field-wrap ${phoneFocus ? 'focused' : ''} ${error && !phone ? 'error-field' : ''}`}
+                style={{ border:`1px solid ${phoneFocus ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.08)'}` }}>
+                <span className="field-icon"><Phone size={16} /></span>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={e => { setPhone(e.target.value); setError(''); }}
+                  onFocus={() => setPhoneFocus(true)}
+                  onBlur={() => setPhoneFocus(false)}
+                  onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                  className="field-input"
+                  placeholder="09121234567"
+                  maxLength={11}
+                  autoComplete="tel"
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div style={{ marginBottom:'24px' }}>
+              <label style={{ display:'block', fontSize:'12px', fontWeight:600, color:'rgba(240,250,245,0.5)', marginBottom:'8px', letterSpacing:'0.03em' }}>
+                رمز عبور
+              </label>
+              <div className={`field-wrap ${passFocus ? 'focused' : ''} ${error && !password ? 'error-field' : ''}`}
+                style={{ border:`1px solid ${passFocus ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.08)'}` }}>
+                <span className="field-icon"><Lock size={16} /></span>
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => { setPassword(e.target.value); setError(''); }}
+                  onFocus={() => setPassFocus(true)}
+                  onBlur={() => setPassFocus(false)}
+                  onKeyDown={e => e.key === 'Enter' && handleLogin()}
+                  className="field-input"
+                  placeholder="رمز عبور"
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(p => !p)}
+                  style={{ padding:'0 14px 0 16px', background:'none', border:'none', cursor:'pointer', color:'rgba(240,250,245,0.25)', display:'flex', alignItems:'center', transition:'color 0.2s', flexShrink:0 }}
+                  onMouseEnter={e => { (e.currentTarget).style.color = 'rgba(240,250,245,0.6)'; }}
+                  onMouseLeave={e => { (e.currentTarget).style.color = 'rgba(240,250,245,0.25)'; }}>
+                  {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <button className="login-btn" onClick={handleLogin} disabled={loading}>
+              {loading ? (
+                <>
+                  <div style={{ width:'18px', height:'18px', border:'2px solid rgba(255,255,255,0.3)', borderTop:'2px solid #fff', borderRadius:'50%', animation:'spin 0.7s linear infinite' }} />
+                  در حال ورود...
+                </>
+              ) : 'ورود به حساب'}
+            </button>
+
+            {/* Divider */}
+            <div style={{ display:'flex', alignItems:'center', gap:'12px', margin:'20px 0' }}>
+              <div style={{ flex:1, height:'1px', background:'rgba(255,255,255,0.06)' }} />
+              <span style={{ fontSize:'11px', color:'rgba(240,250,245,0.2)' }}>یا</span>
+              <div style={{ flex:1, height:'1px', background:'rgba(255,255,255,0.06)' }} />
+            </div>
+
+            {/* Register link */}
+            <p style={{ textAlign:'center', fontSize:'13px', color:'rgba(240,250,245,0.4)', margin:0 }}>
+              حساب ندارید؟{' '}
+              <Link href="/register" style={{ color:'#10b981', fontWeight:700, textDecoration:'none', transition:'opacity 0.2s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.75'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}>
+                ثبت‌نام رایگان
+              </Link>
+            </p>
+          </div>
+
+          {/* Back link */}
+          <div style={{ textAlign:'center', marginTop:'20px' }}>
+            <Link href="/" style={{ display:'inline-flex', alignItems:'center', gap:'6px', fontSize:'12px', color:'rgba(240,250,245,0.3)', textDecoration:'none', transition:'color 0.2s' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(240,250,245,0.6)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(240,250,245,0.3)'; }}>
+              <ArrowLeft size={12} /> بازگشت به صفحه اصلی
+            </Link>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

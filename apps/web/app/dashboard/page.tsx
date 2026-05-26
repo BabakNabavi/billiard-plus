@@ -11,40 +11,41 @@ import {
   ShoppingBag, Play, Plus, Shield, ChevronUp, ChevronDown,
 } from 'lucide-react';
 import ScrollReveal from '../../components/ScrollReveal/ScrollReveal';
+import AuthGuard from '../../components/AuthGuard';
 
 /* ══ types ══ */
-interface Booking    { id: string; club: string; table: string; date: string; time: string; status: 'confirmed'|'pending'|'completed'; price: number; }
-interface Notif      { id: string; type: 'booking'|'tournament'|'achievement'|'system'; msg: string; time: string; read: boolean; }
-interface QuickStat  { label: string; value: string; sub: string; color: string; icon: React.ReactNode; trend?: number; }
+interface Booking { id: string; club: string; table: string; date: string; time: string; status: 'confirmed' | 'pending' | 'completed'; price: number; }
+interface Notif { id: string; type: 'booking' | 'tournament' | 'achievement' | 'system'; msg: string; time: string; read: boolean; }
+interface QuickStat { label: string; value: string; sub: string; color: string; icon: React.ReactNode; trend?: number; }
 
 /* ══ sample data ══ */
 const bookings: Booking[] = [
-  { id: 'b1', club: 'باشگاه سنچوری تهران',    table: 'میز VIP ۱', date: '۱۴۰۴/۰۳/۲۰', time: '۱۸:۰۰–۲۰:۰۰', status: 'confirmed',  price: 700000 },
-  { id: 'b2', club: 'باشگاه المپیک مشهد',     table: 'میز اسنوکر ۳', date: '۱۴۰۴/۰۳/۲۲', time: '۱۴:۰۰–۱۶:۰۰', status: 'pending',    price: 360000 },
-  { id: 'b3', club: 'باشگاه پیروزی اصفهان',  table: 'میز پاکت ۲', date: '۱۴۰۴/۰۳/۱۰', time: '۱۰:۰۰–۱۲:۰۰', status: 'completed', price: 300000 },
+  { id: 'b1', club: 'باشگاه سنچوری تهران', table: 'میز VIP ۱', date: '۱۴۰۴/۰۳/۲۰', time: '۱۸:۰۰–۲۰:۰۰', status: 'confirmed', price: 700000 },
+  { id: 'b2', club: 'باشگاه المپیک مشهد', table: 'میز اسنوکر ۳', date: '۱۴۰۴/۰۳/۲۲', time: '۱۴:۰۰–۱۶:۰۰', status: 'pending', price: 360000 },
+  { id: 'b3', club: 'باشگاه پیروزی اصفهان', table: 'میز پاکت ۲', date: '۱۴۰۴/۰۳/۱۰', time: '۱۰:۰۰–۱۲:۰۰', status: 'completed', price: 300000 },
 ];
 
 const notifications: Notif[] = [
-  { id: 'n1', type: 'booking',     msg: 'رزرو شما در باشگاه سنچوری تأیید شد', time: '۲ دقیقه پیش',  read: false },
-  { id: 'n2', type: 'tournament',  msg: 'ثبت‌نام مسابقات لیگ برتر تا فردا باز است', time: '۱ ساعت پیش',   read: false },
-  { id: 'n3', type: 'achievement', msg: 'مدال ۵۰ مسابقه را دریافت کردید!',        time: '۳ ساعت پیش',  read: true  },
-  { id: 'n4', type: 'system',      msg: 'پروفایل شما توسط فدراسیون تأیید شد',    time: 'دیروز',        read: true  },
+  { id: 'n1', type: 'booking', msg: 'رزرو شما در باشگاه سنچوری تأیید شد', time: '۲ دقیقه پیش', read: false },
+  { id: 'n2', type: 'tournament', msg: 'ثبت‌نام مسابقات لیگ برتر تا فردا باز است', time: '۱ ساعت پیش', read: false },
+  { id: 'n3', type: 'achievement', msg: 'مدال ۵۰ مسابقه را دریافت کردید!', time: '۳ ساعت پیش', read: true },
+  { id: 'n4', type: 'system', msg: 'پروفایل شما توسط فدراسیون تأیید شد', time: 'دیروز', read: true },
 ];
 
 const achievements = [
-  { icon: '🏆', title: 'قهرمان منطقه',    desc: 'اولین قهرمانی',            color: '#f59e0b', earned: true  },
-  { icon: '🎯', title: '۵۰ مسابقه',       desc: 'پنجاهمین مسابقه',         color: '#10b981', earned: true  },
-  { icon: '⭐', title: 'بازیکن ماه',      desc: 'بهترین ماه',              color: '#a78bfa', earned: true  },
-  { icon: '🔥', title: '۱۰ پیروزی پشت‌سرهم', desc: 'ده پیروزی متوالی',  color: '#ef4444', earned: false },
-  { icon: '💎', title: 'نخبه',            desc: 'رنک زیر ۱۰',             color: '#06b6d4', earned: false },
-  { icon: '🚀', title: 'صعود سریع',       desc: '۱۰ رنک در یک ماه',       color: '#f59e0b', earned: false },
+  { icon: '🏆', title: 'قهرمان منطقه', desc: 'اولین قهرمانی', color: '#f59e0b', earned: true },
+  { icon: '🎯', title: '۵۰ مسابقه', desc: 'پنجاهمین مسابقه', color: '#10b981', earned: true },
+  { icon: '⭐', title: 'بازیکن ماه', desc: 'بهترین ماه', color: '#a78bfa', earned: true },
+  { icon: '🔥', title: '۱۰ پیروزی پشت‌سرهم', desc: 'ده پیروزی متوالی', color: '#ef4444', earned: false },
+  { icon: '💎', title: 'نخبه', desc: 'رنک زیر ۱۰', color: '#06b6d4', earned: false },
+  { icon: '🚀', title: 'صعود سریع', desc: '۱۰ رنک در یک ماه', color: '#f59e0b', earned: false },
 ];
 
 const recentMatches = [
-  { opp: 'رضا کریمی',   result: 'W', score: '6-2', date: '۱۴۰۴/۰۳/۱۵', tournament: 'لیگ برتر'  },
-  { opp: 'نیما موسوی',  result: 'W', score: '6-4', date: '۱۴۰۴/۰۳/۱۲', tournament: 'لیگ برتر'  },
-  { opp: 'علی احمدی',   result: 'L', score: '3-6', date: '۱۴۰۴/۰۳/۰۸', tournament: 'جام تهران' },
-  { opp: 'کاوه رستمی',  result: 'W', score: '6-3', date: '۱۴۰۴/۰۳/۰۵', tournament: 'لیگ برتر'  },
+  { opp: 'رضا کریمی', result: 'W', score: '6-2', date: '۱۴۰۴/۰۳/۱۵', tournament: 'لیگ برتر' },
+  { opp: 'نیما موسوی', result: 'W', score: '6-4', date: '۱۴۰۴/۰۳/۱۲', tournament: 'لیگ برتر' },
+  { opp: 'علی احمدی', result: 'L', score: '3-6', date: '۱۴۰۴/۰۳/۰۸', tournament: 'جام تهران' },
+  { opp: 'کاوه رستمی', result: 'W', score: '6-3', date: '۱۴۰۴/۰۳/۰۵', tournament: 'لیگ برتر' },
 ];
 
 const weeklyActivity = [
@@ -58,10 +59,10 @@ const weeklyActivity = [
 ];
 
 const quickStats: QuickStat[] = [
-  { label: 'رنک ملی',        value: '#۳',    sub: '↑۲ این ماه',    color: '#f59e0b', icon: <TrendingUp size={16} />, trend: 2   },
-  { label: 'نرخ پیروزی',    value: '۷۴٪',  sub: 'از ۲۸۴ مسابقه', color: '#10b981', icon: <Target size={16} />,     trend: 3   },
-  { label: 'امتیاز کل',     value: '۸,۴۲۰', sub: '+۴۵۰ این ماه', color: '#a78bfa', icon: <Zap size={16} />,        trend: 12  },
-  { label: 'رزروهای فعال',  value: '۲',     sub: 'هفته جاری',      color: '#06b6d4', icon: <Calendar size={16} />,  trend: 0   },
+  { label: 'رنک ملی', value: '#۳', sub: '↑۲ این ماه', color: '#f59e0b', icon: <TrendingUp size={16} />, trend: 2 },
+  { label: 'نرخ پیروزی', value: '۷۴٪', sub: 'از ۲۸۴ مسابقه', color: '#10b981', icon: <Target size={16} />, trend: 3 },
+  { label: 'امتیاز کل', value: '۸,۴۲۰', sub: '+۴۵۰ این ماه', color: '#a78bfa', icon: <Zap size={16} />, trend: 12 },
+  { label: 'رزروهای فعال', value: '۲', sub: 'هفته جاری', color: '#06b6d4', icon: <Calendar size={16} />, trend: 0 },
 ];
 
 function toFa(v: string | number) {
@@ -79,14 +80,14 @@ function ActivityBar({ sessions, max }: { sessions: number; max: number }) {
 }
 
 /* ── radial progress ── */
-function Ring({ value, size = 64, stroke = 5, color = '#10b981', label }: { value: number; size?: number; stroke?: number; color?: string; label?: string; }) {
+function Ring({ value, size = 64, stroke = 5, color = '#10b981', label }: { value: number; size?: number; stroke?: number; color?: string; label?: boolean; }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke} />
-        <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke}
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={stroke}
           strokeDasharray={c} strokeDashoffset={c - (value / 100) * c}
           strokeLinecap="round"
           style={{ filter: `drop-shadow(0 0 5px ${color}80)`, transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)' }} />
@@ -102,19 +103,18 @@ function Ring({ value, size = 64, stroke = 5, color = '#10b981', label }: { valu
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
-  const router   = useRouter();
+  const router = useRouter();
   const [notifOpen, setNotifOpen] = useState(false);
-  const [scrollY, setScrollY]     = useState(0);
-  const [greeting, setGreeting]   = useState('');
+  const [scrollY, setScrollY] = useState(0);
+  const [greeting, setGreeting] = useState('');
   const rafRef = useRef<number>(0);
   const unread = notifications.filter(n => !n.read).length;
   const maxAct = Math.max(...weeklyActivity.map(d => d.sessions));
 
   useEffect(() => {
-    if (!user) { router.push('/login'); return; }
     const h = new Date().getHours();
     setGreeting(h < 12 ? 'صبح بخیر' : h < 18 ? 'عصر بخیر' : 'شب بخیر');
-  }, [user, router]);
+  }, []);
 
   useEffect(() => {
     const fn = () => {
@@ -128,6 +128,8 @@ export default function DashboardPage() {
   if (!user) return null;
 
   return (
+    <AuthGuard>
+    
     <>
       <style>{`
         @keyframes fadeUp   { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);} }
@@ -266,8 +268,8 @@ export default function DashboardPage() {
                     <div style={{ maxHeight: '320px', overflowY: 'auto', padding: '8px' }}>
                       {notifications.map((n, i) => (
                         <div key={i} style={{ display: 'flex', gap: '12px', padding: '12px', borderRadius: '12px', background: n.read ? 'transparent' : 'rgba(16,185,129,0.04)', marginBottom: '4px', cursor: 'pointer', transition: 'background 0.2s' }}>
-                          <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: { booking: 'rgba(16,185,129,0.1)', tournament: 'rgba(245,158,11,0.1)', achievement: 'rgba(167,139,250,0.1)', system: 'rgba(255,255,255,0.05)' }[n.type], border: `1px solid ${{'booking':'rgba(16,185,129,0.2)','tournament':'rgba(245,158,11,0.2)','achievement':'rgba(167,139,250,0.2)','system':'rgba(255,255,255,0.07)'}[n.type]}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            {{'booking':<Calendar size={14} style={{color:'#10b981'}}/>,'tournament':<Trophy size={14} style={{color:'#f59e0b'}}/>,'achievement':<Award size={14} style={{color:'#a78bfa'}}/>,'system':<Shield size={14} style={{color:'rgba(240,250,245,0.4)'}}/>}[n.type]}
+                          <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: { booking: 'rgba(16,185,129,0.1)', tournament: 'rgba(245,158,11,0.1)', achievement: 'rgba(167,139,250,0.1)', system: 'rgba(255,255,255,0.05)' }[n.type], border: `1px solid ${{ 'booking': 'rgba(16,185,129,0.2)', 'tournament': 'rgba(245,158,11,0.2)', 'achievement': 'rgba(167,139,250,0.2)', 'system': 'rgba(255,255,255,0.07)' }[n.type]}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            {{ 'booking': <Calendar size={14} style={{ color: '#10b981' }} />, 'tournament': <Trophy size={14} style={{ color: '#f59e0b' }} />, 'achievement': <Award size={14} style={{ color: '#a78bfa' }} />, 'system': <Shield size={14} style={{ color: 'rgba(240,250,245,0.4)' }} /> }[n.type]}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: '12px', color: n.read ? 'rgba(240,250,245,0.55)' : '#f0faf5', fontWeight: n.read ? 400 : 600, lineHeight: 1.5, marginBottom: '3px' }}>{n.msg}</div>
@@ -331,11 +333,11 @@ export default function DashboardPage() {
                   </div>
                   <div className="actions-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: '10px' }}>
                     {[
-                      { href: '/clubs',      icon: <MapPin size={20} />,     label: 'رزرو میز',     color: '#10b981' },
-                      { href: '/events',     icon: <Trophy size={20} />,     label: 'مسابقات',      color: '#f59e0b' },
-                      { href: '/shop',       icon: <ShoppingBag size={20} />,label: 'فروشگاه',      color: '#a78bfa' },
-                      { href: '/players',    icon: <Users size={20} />,      label: 'بازیکنان',     color: '#06b6d4' },
-                      { href: '/rankings',   icon: <BarChart2 size={20} />,  label: 'رنکینگ',       color: '#ef4444' },
+                      { href: '/clubs', icon: <MapPin size={20} />, label: 'رزرو میز', color: '#10b981' },
+                      { href: '/events', icon: <Trophy size={20} />, label: 'مسابقات', color: '#f59e0b' },
+                      { href: '/shop', icon: <ShoppingBag size={20} />, label: 'فروشگاه', color: '#a78bfa' },
+                      { href: '/players', icon: <Users size={20} />, label: 'بازیکنان', color: '#06b6d4' },
+                      { href: '/rankings', icon: <BarChart2 size={20} />, label: 'رنکینگ', color: '#ef4444' },
                     ].map((a, i) => (
                       <Link key={i} href={a.href} className="quick-action">
                         <div style={{ width: '44px', height: '44px', borderRadius: '14px', background: `${a.color}12`, border: `1px solid ${a.color}22`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: a.color }}>
@@ -370,9 +372,9 @@ export default function DashboardPage() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {bookings.map((b, i) => {
                         const statusConfig = {
-                          confirmed:  { color: '#10b981', label: 'تأیید شده',  bg: 'rgba(16,185,129,0.1)',  border: 'rgba(16,185,129,0.2)'  },
-                          pending:    { color: '#f59e0b', label: 'در انتظار', bg: 'rgba(245,158,11,0.1)',  border: 'rgba(245,158,11,0.2)'  },
-                          completed:  { color: '#94a3b8', label: 'انجام شده',  bg: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08)' },
+                          confirmed: { color: '#10b981', label: 'تأیید شده', bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.2)' },
+                          pending: { color: '#f59e0b', label: 'در انتظار', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.2)' },
+                          completed: { color: '#94a3b8', label: 'انجام شده', bg: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08)' },
                         }[b.status];
                         return (
                           <div key={i} className="booking-row">
@@ -438,9 +440,9 @@ export default function DashboardPage() {
                   {/* Weekly summary */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '10px', marginTop: '18px', paddingTop: '18px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                     {[
-                      { v: toFa(weeklyActivity.reduce((a,d)=>a+d.sessions,0)), l: 'جلسه',     c: '#06b6d4' },
-                      { v: toFa(weeklyActivity.reduce((a,d)=>a+d.wins,0)),     l: 'پیروزی',   c: '#10b981' },
-                      { v: toFa(weeklyActivity.reduce((a,d)=>a+d.losses,0)),   l: 'شکست',     c: '#ef4444' },
+                      { v: toFa(weeklyActivity.reduce((a, d) => a + d.sessions, 0)), l: 'جلسه', c: '#06b6d4' },
+                      { v: toFa(weeklyActivity.reduce((a, d) => a + d.wins, 0)), l: 'پیروزی', c: '#10b981' },
+                      { v: toFa(weeklyActivity.reduce((a, d) => a + d.losses, 0)), l: 'شکست', c: '#ef4444' },
                     ].map((s, i) => (
                       <div key={i} style={{ textAlign: 'center', padding: '10px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.04)' }}>
                         <div style={{ fontSize: '20px', fontWeight: 900, color: s.c, letterSpacing: '-0.02em' }}>{s.v}</div>
@@ -581,11 +583,11 @@ export default function DashboardPage() {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {[
-                      { label: 'اطلاعات پایه',    done: true  },
-                      { label: 'تصویر پروفایل',   done: true  },
-                      { label: 'سابقه مسابقات',   done: true  },
-                      { label: 'ویدیوی هایلایت',  done: false },
-                      { label: 'تأیید فدراسیون',  done: false },
+                      { label: 'اطلاعات پایه', done: true },
+                      { label: 'تصویر پروفایل', done: true },
+                      { label: 'سابقه مسابقات', done: true },
+                      { label: 'ویدیوی هایلایت', done: false },
+                      { label: 'تأیید فدراسیون', done: false },
                     ].map((r, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: r.done ? 'rgba(240,250,245,0.55)' : 'rgba(240,250,245,0.25)' }}>
                         {r.done
@@ -606,5 +608,7 @@ export default function DashboardPage() {
         </div>
       </div>
     </>
+
+    </AuthGuard>
   );
 }

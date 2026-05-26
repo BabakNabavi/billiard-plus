@@ -670,28 +670,7 @@ export default function ClubProfilePage() {
       </div>
 
       {/* ── BOOKING MODAL ── */}
-      {showBook && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(16px)' }} onClick={() => setShowBook(false)} />
-          <div style={{ position: 'relative', width: 'min(520px, 94vw)', background: 'rgba(6,13,10,0.98)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.6)' }}>
-            <div style={{ background: 'linear-gradient(135deg,#064e3b,#065f46)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.18em', marginBottom: '4px' }}>ONLINE RESERVATION</div>
-                <h3 style={{ color: '#fff', fontWeight: 900, fontSize: '16px', margin: 0 }}>{club.name}</h3>
-              </div>
-              <button onClick={() => setShowBook(false)} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', cursor: 'pointer', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <X size={16} />
-              </button>
-            </div>
-            <div style={{ padding: '28px 24px' }}>
-              <Link href={`/booking/${club.id}`} onClick={() => setShowBook(false)}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', width: '100%', padding: '15px', background: 'linear-gradient(135deg,#10b981,#059669)', borderRadius: '14px', color: '#fff', fontSize: '15px', fontWeight: 800, textDecoration: 'none', boxShadow: '0 8px 28px rgba(16,185,129,0.35)' }}>
-                <Calendar size={17} /> ادامه و انتخاب میز
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </>
   );
 }
