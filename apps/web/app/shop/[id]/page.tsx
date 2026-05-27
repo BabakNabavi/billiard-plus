@@ -7,7 +7,7 @@ import {
   Star, ChevronRight, Heart, Share2, ShoppingCart,
   Check, Shield, Truck, RefreshCw, Award, ChevronLeft,
   ChevronDown, ChevronUp, MapPin, Package, Zap,
-  MessageCircle, ThumbsUp, Play, Plus, Minus,
+  MessageCircle, ThumbsUp, Play, Plus, Minus, X
 } from 'lucide-react';
 
 /* ══ types ══ */

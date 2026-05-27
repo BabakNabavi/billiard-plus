@@ -283,7 +283,7 @@ function SellerContent() {
                       </div>
                     ))}
                     <div style={{ display:'flex', gap:'6px', marginTop:'14px', justifyContent:'center' }}>
-                      <div style={{ display:'flex', alignItems:'center', gap:'4px', padding:'4px 10px', background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)', borderRadius:'20px', fontSize:'10px', color:'#10b981', fontWeight:700' }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:'4px', padding:'4px 10px', background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)', borderRadius:'20px', fontSize:'10px', color:'#10b981', fontWeight:700 }}>
                         <Shield size={10}/> فروشنده تأیید شده
                       </div>
                     </div>
